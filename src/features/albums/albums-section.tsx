@@ -25,9 +25,7 @@ export function AlbumsSection({ albums }: { albums: Album[] }) {
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-white/70">Dejamos todo por estos colores. Cada álbum guarda un pedacito de esa pasión.</p>
           </div>
-          {albums.some((album) => album.isExample) && (
-            <p className="mb-6 text-xs text-white/70">Álbumes de muestra · imágenes de referencia del club, pendientes de reemplazar por fotos del grupo.</p>
-          )}
+
           <div id="albums-list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((album) => (
               <Link key={album.slug} href={`/albumes/${album.slug}`} className="group block min-w-0 rounded-xl border border-white/20 bg-white/5 transition-colors hover:bg-white/10 focus-visible:outline-primary">

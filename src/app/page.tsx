@@ -1,7 +1,7 @@
 import { AlbumsSection } from "@/features/albums/albums-section";
 import { albums } from "@/features/albums/content";
 import { Header } from "@/features/landing/header";
-import { Hero, PassionIntro } from "@/features/landing/hero";
+import { Hero } from "@/features/landing/hero";
 import {
   MembersSection,
   TestimonialsSection,
@@ -34,9 +34,7 @@ export default async function Home() {
       <Header />
       <main id="contenido">
         <Hero />
-        <ScrollReveal>
-          <PassionIntro />
-        </ScrollReveal>
+        {/* <PassionIntro /> */}
         <AboutSection />
         <MatchesSection {...matches} />
         <MembersSection />
@@ -55,6 +53,8 @@ export default async function Home() {
           </div>
         </section>
       </main>
+      <div className="h-[400px] w-full bg-[url('/images/history.jpg')] bg-cover">
+      </div>
       <Footer />
     </>
   );

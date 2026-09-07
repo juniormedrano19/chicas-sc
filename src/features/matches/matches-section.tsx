@@ -13,7 +13,7 @@ export function MatchesSection({ matches, state }: MatchResult) {
         <ScrollReveal>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow mb-3">90 minutos. Una misma emoción.</p>
+
               <h2 className="section-title">
                 Últimos partidos
               </h2>

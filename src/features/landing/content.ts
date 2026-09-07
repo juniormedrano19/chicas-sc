@@ -5,13 +5,23 @@ export const navLinks = [
   { label: "Recuerdos", href: "#recuerdos" },
   { label: "Comunidad", href: "#redes" },
 ];
-export const members = [
+export type Member = {
+  name: string;
+  role: string;
+  initials: string;
+  number: string;
+  quote: string;
+  image?: string;
+};
+
+export const members: Member[] = [
   {
     name: "Laura",
     role: "Coordinación",
     initials: "VA",
     number: "01",
     quote: "La celeste se lleva en el corazón.",
+    image:"/images/integrantes/laura.jpeg"
   },
   {
     name: "Sol",
@@ -19,6 +29,7 @@ export const members = [
     initials: "CA",
     number: "02",
     quote: "La mejor tribuna es la que compartimos.",
+        image:"/images/integrantes/sol.jpeg"
   },
   {
     name: "Estrella",
@@ -26,6 +37,7 @@ export const members = [
     initials: "LU",
     number: "03",
     quote: "Cada encuentro merece ser recordado.",
+         image:"/images/integrantes/estrella.jpeg"
   },
   {
     name: "Andrea",
@@ -35,35 +47,43 @@ export const members = [
     quote: "Siempre hay lugar para una celeste más.",
   },
   {
-    name: "Daniela",
+    name: "Integrante 5",
     role: "Integrante",
     initials: "DA",
     number: "05",
     quote: "Juntas, en las buenas y en las malas.",
   },
   {
-    name: "Mariana",
+    name: "Integrante 6",
     role: "Integrante",
     initials: "MA",
     number: "06",
     quote: "Una camiseta, miles de historias.",
   },
 ];
-export const testimonials = [
+export type Testimonial = {
+  name: string;
+  text: string;
+  tag: string;
+  image?: string;
+};
+
+export const testimonials: Testimonial[] = [
   {
     name: "Laura",
     text: "Llegué por el amor a Cristal. Me quedé por las amigas que encontré en el camino.",
-    tag: "Amistad que se siente",
+    tag: "Chica SC",
+      image: "/images/integrantes/laura.webp",
   },
   {
     name: "Sol",
     text: "Compartir un gol, una previa, una tarde de fútbol… con ellas todo se vive más bonito.",
-    tag: "Más que noventa minutos",
+    tag: "Chica SC",
   },
   {
     name: "José",
     text: "Aquí todas tenemos algo en común: una pasión que no se explica, se vive.",
-    tag: "Un mismo corazón",
+      tag: "Chica SC",
   },
 ];
 export const faqs = [

@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Brand } from "@/components/brand/brand";
 export function Footer() {
   return (
-    <footer className="bg-secondary py-12 text-white">
+    <footer className="bg-primary py-12 text-white">
       <div className="wrap">
         <div className="grid gap-10 border-b border-white/20 pb-12 md:grid-cols-[2fr_1fr_1fr]">
           <div>

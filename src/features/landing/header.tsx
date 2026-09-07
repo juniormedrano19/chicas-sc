@@ -19,7 +19,7 @@ export function Header() {
           <Brand />
           <nav
             aria-label="Navegación principal"
-            className="hidden items-center gap-6 xl:flex  px-3 py-3"
+            className="hidden items-center gap-6 xl:flex  px-3 py-3  rounded-2xl bg-white/10"
           >
             {navLinks.map((x) => (
               <a
@@ -33,7 +33,7 @@ export function Header() {
           </nav>
           <Button
             asChild
-            className="hidden rounded-full bg-secondary px-6 text-white hover:bg-secondary/90 sm:inline-flex"
+            className="hidden rounded-full bg-white px-6 text-secondary hover:bg-secondary/90  hover:text-white sm:inline-flex border "
           >
             <a href="#contacto">
               Súmate a nosotras <ArrowRight className="size-4" />

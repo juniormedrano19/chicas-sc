@@ -106,10 +106,10 @@
     @apply py-14 sm:py-20 xl:py-28;
   }
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[.22em];
+    @apply text-sm font-semibold uppercase tracking-[.07em];
   }
   .display {
-    @apply font-display font-bold uppercase leading-[.91] tracking-[-.035em];
+    @apply font-display font-bold uppercase leading-[1] tracking-[-.010em];
   }
   .section-title {
     @apply font-display font-bold uppercase leading-[1.08] tracking-tight;
