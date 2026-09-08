@@ -1,10 +1,15 @@
 # Decisiones de arquitectura y servicios
 
-## Supabase frente a Firebase
+## Firebase / Firestore
 
-Recomendación para Chicas SC: **Supabase**. Partidos, integrantes, encuentros y fotos pueden representarse con relaciones, restricciones SQL y migraciones. Postgres y las políticas RLS ofrecen una base adecuada para añadir administración más adelante. La implementación actual usa un repositorio de partidos y acceso privilegiado solo desde servidor.
+Se eligió **Firebase Firestore en Spark** para mantener el proyecto sin coste
+mensual y evitar la pausa por inactividad del plan gratuito de Supabase. Las
+relaciones se expresan mediante IDs de documentos y la estructura detallada se
+mantiene en `docs/firebase-firestore-schema.md`.
 
-Firebase/Firestore sería razonable si la prioridad fuese una aplicación móvil con sincronización offline y documentos en tiempo real. No es una mala opción, pero no aporta una ventaja decisiva para esta landing con entidades relacionadas.
+La escritura de contactos y la futura administración se ejecutarán desde Route
+Handlers de Next.js con Firebase Admin. Las reglas públicas de Firestore deben
+denegar por defecto todo acceso directo del navegador.
 
 Fuentes:
 

@@ -73,17 +73,19 @@ export const testimonials: Testimonial[] = [
     name: "Laura",
     text: "Llegué por el amor a Cristal. Me quedé por las amigas que encontré en el camino.",
     tag: "Chica SC",
-      image: "/images/integrantes/laura.webp",
+      image: "/images/integrantes/laura.jpeg",
   },
   {
     name: "Sol",
     text: "Compartir un gol, una previa, una tarde de fútbol… con ellas todo se vive más bonito.",
     tag: "Chica SC",
+          image: "/images/integrantes/sol.jpeg",
   },
   {
-    name: "José",
+    name: "Estrella",
     text: "Aquí todas tenemos algo en común: una pasión que no se explica, se vive.",
       tag: "Chica SC",
+            image: "/images/integrantes/estrella.jpeg",
   },
 ];
 export const faqs = [

@@ -71,6 +71,7 @@ export function ScrollReveal({
       )}
     >
       <motion.div
+        className={className}
         initial={prefersReducedMotion ? false : entryOffset}
         animate={isVisible ? { x: 0, y: 0 } : exitOffset}
         transition={{ duration: isVisible ? 0.55 : 0.4, ease: [0.22, 1, 0.36, 1] }}

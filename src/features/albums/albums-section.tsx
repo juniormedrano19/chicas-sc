@@ -23,7 +23,7 @@ export function AlbumsSection({ albums }: { albums: Album[] }) {
               <p className="eyebrow mb-4 text-primary">Momentos que se quedan</p>
               <h2 className="section-title">Nuestros recuerdos<span className="text-accent">.</span></h2>
             </div>
-            <p className="max-w-xs text-sm leading-relaxed text-white/70">Dejamos todo por estos colores. Cada álbum guarda un pedacito de esa pasión.</p>
+
           </div>
 
           <div id="albums-list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

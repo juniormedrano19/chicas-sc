@@ -72,18 +72,10 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
       className="py-4 lg:px-8"
     >
       <p className="eyebrow mb-3">Hablemos</p>
-      <h3 className="font-display text-4xl font-semibold uppercase">
+      <h3 className="font-display text-4xl font-semibold uppercase leading-11">
         Tu mensaje es el comienzo.
       </h3>
-      {!enabled && (
-        <p
-          role="status"
-          className="mt-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
-        >
-          Estamos preparando nuestro canal de contacto. El envío estará
-          disponible pronto.
-        </p>
-      )}
+
       <div className="mt-7 space-y-5">
         <div>
           <Label htmlFor="name" className="mb-2">

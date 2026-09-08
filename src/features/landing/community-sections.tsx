@@ -5,14 +5,9 @@ import Script from "next/script";
 import Image from "next/image";
 import {
   ArrowRight,
-  ArrowUpRight,
   Plus,
-  Heart,
-  Camera,
   ChevronLeft,
   ChevronRight,
-  Users,
-  Music2,
   Quote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,61 +27,30 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { members, testimonials, faqs } from "./content";
+import { AboutFocusPanels } from "./about-focus-panels";
 
 export function AboutSection() {
   return (
-    <section id="quienes-somos" className="section overflow-hidden bg-muted">
-      <div className="wrap grid items-center gap-10 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] lg:gap-20">
+    <section id="quienes-somos" className="overflow-hidden bg-muted py-16 sm:py-20 lg:py-24">
+      <div className="wrap mb-10 grid items-end gap-6 lg:mb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,.75fr)]">
         <ScrollReveal direction="left">
-          <div className="relative mx-auto flex aspect-square w-full max-w-[460px] items-center justify-center overflow-hidden rounded-full border-[14px] border-white bg-primary p-12 sm:border-[20px] sm:p-20">
-            <span className="absolute inset-6 rounded-full border border-secondary/20 sm:inset-9" />
-            <span className="absolute -left-7 top-1/2 size-24 -translate-y-1/2 rounded-full bg-accent sm:size-32" />
-            <span className="absolute -right-6 top-10 size-16 rounded-full bg-white/55 sm:size-24" />
-            <Image
-              src="/images/chicas-sc-logo-transparent.png"
-              alt="Logo de Chicas SC"
-              width={1080}
-              height={1080}
-              sizes="(min-width: 1024px) 360px, 75vw"
-              className="relative z-10 h-auto w-full object-contain"
-            />
+          <div>
+
+            <h2 className="section-title">
+              ¿Quiénes somos<span>?</span>
+            </h2>
           </div>
         </ScrollReveal>
-
         <ScrollReveal direction="right">
-
-          <h2 className="section-title">
-            ¿Quiénes
-            <br />
-            somos<span className="text-primary">?</span>
-          </h2>
-          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Somos Chicas SC, una comunidad de mujeres hinchas que vive y comparte la
-            pasión por el único y el más grande; &ldquo;Sporting Cristal&rdquo;. Nos encontramos para alentar, crear
-            recuerdos y hacer que cada partido se sienta como casa.
+          <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:ml-auto">
+            Somos Chicas SC, una comunidad de mujeres hinchas unida por la celeste,
+            la amistad y cada historia que nace en la tribuna.
           </p>
-          <div className="mt-9 grid gap-4 sm:grid-cols-3">
-            {[
-              ["Alentamos", "Con la celeste siempre en el corazón."],
-              ["Compartimos", "Amistad, previas y momentos inolvidables."],
-              ["Crecemos", "Con un espacio abierto para más chicas celestes."],
-            ].map(([title, copy], index) => (
-              <div key={title} className="border-t-2 border-secondary pt-4">
-                <span className="font-display text-2xl font-semibold text-primary">
-                  0{index + 1}
-                </span>
-                <h3 className="mt-2 font-semibold">{title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {copy}
-                </p>
-              </div>
-            ))}
-          </div>
-          <Button asChild variant="outline" className="mt-9 rounded-full border-secondary px-7">
-            <a href="#contacto">
-              Súmate a la comunidad <ArrowRight />
-            </a>
-          </Button>
+        </ScrollReveal>
+      </div>
+      <div className="wrap">
+        <ScrollReveal>
+          <AboutFocusPanels />
         </ScrollReveal>
       </div>
     </section>
@@ -96,7 +60,7 @@ export function AboutSection() {
 export function MembersSection() {
   const [expanded, setExpanded] = useState(false);
   return (
-    <section id="nosotras" className="section">
+    <section id="nosotras" className="section pt-0">
       <div className="wrap">
         <ScrollReveal>
           <div className="mb-12 grid items-end gap-6 md:grid-cols-2">
@@ -142,7 +106,7 @@ export function MembersSection() {
                     <div className="relative z-10 flex aspect-[.9] w-full  justify-between gap-6 p-5 sm:aspect-[.85] xl:aspect-[.74] xl:p-7">
 
 
-                      <span className="flex items-end justify-between gap-2">
+                      <span className="flex h-fit w-fit self-end items-end justify-between gap-2 rounded-lg bg-black/10 px-3 py-2 text-white backdrop-blur-md">
                         <span>
                           <span className="block font-display text-xl font-semibold uppercase sm:text-2xl lg:text-xl xl:text-2xl">
                             {m.name}
@@ -247,7 +211,28 @@ export function TestimonialsSection() {
             <div>
               <p className="eyebrow mb-4">Voces de nuestra comunidad</p>
               <h2 className="section-title">Se siente. Se comparte.</h2>
-
+              <div className="mt-6 flex items-center gap-4 sm:hidden">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Ver testimonio anterior"
+                  onClick={() => moveTo(currentIndex - 1)}
+                  className="size-14 rounded-full border-secondary bg-white text-secondary hover:bg-primary hover:text-secondary"
+                >
+                  <ChevronLeft className="size-7" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Ver siguiente testimonio"
+                  onClick={() => moveTo(currentIndex + 1)}
+                  className="size-14 rounded-full border-secondary bg-white text-secondary hover:bg-primary hover:text-secondary"
+                >
+                  <ChevronRight className="size-7" />
+                </Button>
+              </div>
             </div>
             <div className="hidden items-center gap-3 sm:flex">
               <Button
@@ -314,26 +299,6 @@ export function TestimonialsSection() {
               </article>
             ))}
           </div>
-          <div className="mt-4 flex items-center justify-between gap-4 sm:hidden">
-            <Button
-              type="button"
-              variant="outline"
-              aria-label="Ver testimonio anterior"
-              onClick={() => moveTo(currentIndex - 1)}
-              className="rounded-full border-secondary bg-white px-5 hover:bg-primary"
-            >
-              <ChevronLeft /> Anterior
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              aria-label="Ver siguiente testimonio"
-              onClick={() => moveTo(currentIndex + 1)}
-              className="rounded-full border-secondary bg-white px-5 hover:bg-primary"
-            >
-              Siguiente <ChevronRight />
-            </Button>
-          </div>
         </ScrollReveal>
       </div>
     </section>
@@ -349,10 +314,7 @@ export function SocialSection() {
               <p className="eyebrow mb-4">Soy celeste, soy celeste…</p>
               <h2 className="section-title">Nos vemos en redes.</h2>
             </div>
-            <p className="max-w-sm self-end text-muted-foreground md:ml-auto">
-              Previas, goles y momentos entre amigas. Pronto compartiremos aquí
-              las cuentas oficiales del grupo.
-            </p>
+
           </div>
 
 
@@ -369,7 +331,7 @@ export function SocialSection() {
                 className="mx-auto w-full max-w-[360px] overflow-hidden rounded-xl bg-black"
               >
                 <iframe
-                  src={`https://www.tiktok.com/player/v1/${videoId}?music_info=0&description=0`}
+                  src={`https://www.tiktok.com/player/v1/${videoId}?autoplay=0&loop=0&music_info=0&description=0`}
                   title={`Video ${index + 1} de Chicas SC en TikTok`}
                   className="aspect-[9/16] w-full border-0"
                   loading="lazy"
@@ -429,29 +391,14 @@ export function FAQSection() {
 }
 export function ContactIntro() {
   return (
-    <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-primary p-6 sm:p-8 xl:p-12 text-white">
-      <div>
-        <p className="eyebrow mb-6">Con mi Cristal seguiremos adelante</p>
-        <h2 className="section-title">
-          La próxima
-          <br />
-          historia,
-          <br />
-          es contigo<span className="text-white">.</span>
-        </h2>
-        <p className="mt-7 max-w-xs leading-relaxed">
-          Para sumarte, colaborar o simplemente decir hola. Nos encantará
-          conocerte.
-        </p>
-      </div>
-      <div className="mt-12 flex items-end justify-between gap-2">
-        <span className="text-sm font-medium">
-          Porque podemos.
-          <br />
-          Con gran confianza.
-        </span>
-
-      </div>
+    <div className="relative h-full min-h-[30rem] overflow-hidden rounded-2xl lg:min-h-0">
+      <Image
+        src="/images/contact/contact-image.jpg"
+        alt="Integrantes de Chicas SC"
+        fill
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="object-cover"
+      />
     </div>
   );
 }

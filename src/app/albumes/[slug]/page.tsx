@@ -9,6 +9,14 @@ import { albums, getAlbum } from "@/features/albums/content";
 
 type Props = { params: Promise<{ slug: string }> };
 
+const bentoLayout = [
+  "col-span-2 row-span-2",
+  "row-span-2",
+  "row-span-1",
+  "row-span-1",
+  "col-span-2 row-span-2",
+];
+
 export function generateStaticParams() {
   return albums.map(({ slug }) => ({ slug }));
 }
@@ -28,22 +36,30 @@ export default async function AlbumPage({ params }: Props) {
       <header className="bg-secondary py-8 text-white sm:py-12">
         <div className="wrap">
           <div className="mb-10 flex flex-wrap items-center justify-between gap-5">
-          <Brand />
-          <Button asChild variant="outline" className=" rounded-full border-white/40 bg-transparent text-white hover:bg-white hover:text-secondary"><Link href="/#recuerdos"><ArrowLeft />Volver a los álbumes</Link></Button>
+            <Brand />
+            <Button asChild variant="outline" className=" rounded-full border-white/40 bg-transparent text-white hover:bg-white hover:text-secondary"><Link href="/#recuerdos"><ArrowLeft />Volver a los álbumes</Link></Button>
           </div>
-          <p className="eyebrow mb-4 text-primary">Chicas SC · Nuestros recuerdos</p>
+
           <h1 className="section-title max-w-4xl">{album.title}</h1>
           <p className="mt-5 max-w-xl leading-relaxed text-white/80">{album.description}</p>
           <p className="mt-6 flex items-center gap-2 text-sm text-primary"><Images className="size-4" />{album.photos.length} {album.photos.length === 1 ? "foto" : "fotos"}</p>
         </div>
       </header>
       <div className="wrap pt-8 sm:pt-12">
-        {album.isExample && <p className="mb-8 rounded-lg border bg-white p-4 text-sm text-muted-foreground">Álbum de muestra. Estas imágenes son referencias del Club Sporting Cristal y no documentan un encuentro del grupo.</p>}
-        <div className="grid items-start gap-6 md:grid-cols-2">
+
+        <div className="grid auto-rows-[9rem] grid-cols-2 gap-3 rounded-[1.75rem]  sm:auto-rows-[11rem] md:grid-cols-4 md:auto-rows-[10rem] md:gap-4 lg:auto-rows-[12rem]">
           {album.photos.map((photo, index) => (
-            <figure key={`${photo.src}-${index}`} className="overflow-hidden rounded-xl border bg-white">
-              <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes="(min-width: 1320px) 600px, (min-width: 768px) 46vw, 100vw" className="h-auto w-full" />
-              <figcaption className="p-4 text-sm text-muted-foreground">{photo.caption}</figcaption>
+            <figure
+              key={`${photo.src}-${index}`}
+              className={`group relative min-h-0 overflow-hidden rounded-2xl bg-muted ${bentoLayout[index % bentoLayout.length]}`}
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(min-width: 1024px) 34vw, (min-width: 768px) 45vw, 50vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </figure>
           ))}
         </div>

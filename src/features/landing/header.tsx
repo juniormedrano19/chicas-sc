@@ -19,7 +19,7 @@ export function Header() {
           <Brand />
           <nav
             aria-label="Navegación principal"
-            className="hidden items-center gap-6 xl:flex  px-3 py-3  rounded-2xl bg-white/10"
+            className="hidden items-center gap-6 xl:flex  px-3 py-3  rounded-2xl text-white"
           >
             {navLinks.map((x) => (
               <a

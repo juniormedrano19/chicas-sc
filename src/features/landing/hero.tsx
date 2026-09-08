@@ -39,7 +39,7 @@ export function PassionIntro() {
 
         {/* font-[family-name:var(--font-sacramento)] */}
 
-        <h2 className=" text-[100px] font-normal leading-[.95] tracking-normal text-white">
+        <h2 className="font-[family-name:var(--font-sacramento)] text-[100px] font-normal leading-[.95] tracking-normal text-white">
           &ldquo;Somos la fuerza ganadora
 
           siempre <span className="text-secondary [-webkit-text-stroke:2px_#fff] [paint-order:stroke_fill]">campeones  </span> siempre primeros, [...] , la actitud positiva que tenemos hará que siempre seamos      <span className="text-secondary [-webkit-text-stroke:2px_#fff] [paint-order:stroke_fill]">campeones  </span>...&rdquo;

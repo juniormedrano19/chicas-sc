@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "seed:firestore": "node --experimental-strip-types scripts/seed-firestore.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -16,6 +17,7 @@
     "clsx": "^2.1.1",
     "cn": "^0.2.5",
     "date-fns": "^4.4.0",
+    "firebase": "^12.18.0",
     "framer-motion": "^13.2.0",
     "lucide-react": "^1.41.0",
     "next": "16.3.4",
