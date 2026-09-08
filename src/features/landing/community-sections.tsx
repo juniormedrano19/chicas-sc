@@ -15,7 +15,6 @@ import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -32,7 +31,7 @@ import { AboutFocusPanels } from "./about-focus-panels";
 export function AboutSection() {
   return (
     <section id="quienes-somos" className="overflow-hidden bg-muted py-16 sm:py-20 lg:py-24">
-      <div className="wrap mb-10 grid items-end gap-6 lg:mb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,.75fr)]">
+      <div className="wrap mb-10 grid items-end gap-6 lg:mb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,.75fr)] text-center lg:text-left">
         <ScrollReveal direction="left">
           <div>
 
@@ -60,11 +59,11 @@ export function AboutSection() {
 export function MembersSection() {
   const [expanded, setExpanded] = useState(false);
   return (
-    <section id="nosotras" className="section pt-0">
+    <section id="nosotras" className="section pt-0 sm:pt-14">
       <div className="wrap">
         <ScrollReveal>
           <div className="mb-12 grid items-end gap-6 md:grid-cols-2">
-            <div>
+            <div className="w-full text-center sm:w-auto sm:text-left">
               <p className="eyebrow mb-4">¡Fuerza Cristal!</p>
               <h2 className="section-title">
                 Distintas historias.
@@ -73,7 +72,7 @@ export function MembersSection() {
               </h2>
             </div>
             <div className="max-w-md md:ml-auto">
-              <p className="leading-relaxed text-muted-foreground">
+              <p className="leading-relaxed text-muted-foreground text-center lg:text-left">
                 En la tribuna encontramos mucho más que fútbol. Encontramos
                 amigas, cómplices y una familia que sigue creciendo.
               </p>
@@ -108,7 +107,7 @@ export function MembersSection() {
 
                       <span className="flex h-fit w-fit self-end items-end justify-between gap-2 rounded-lg bg-black/10 px-3 py-2 text-white backdrop-blur-md">
                         <span>
-                          <span className="block font-display text-xl font-semibold uppercase sm:text-2xl lg:text-xl xl:text-2xl">
+                          <span className="block font-display text-xl font-semibold uppercase sm:text-2xl lg:text-xl ">
                             {m.name}
                           </span>
 
@@ -120,12 +119,10 @@ export function MembersSection() {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="font-display text-4xl uppercase">
+                    <DialogTitle className="font-display text:lg sm:text-2xl uppercase">
                       {m.name}
                     </DialogTitle>
-                    <DialogDescription>
-                      {m.role} · Perfil de muestra
-                    </DialogDescription>
+
                   </DialogHeader>
                   {m.image && (
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted">
@@ -138,12 +135,8 @@ export function MembersSection() {
                       />
                     </div>
                   )}
-                  <p className="py-5 text-xl">“{m.quote}”</p>
-                  <p className="text-sm text-muted-foreground">
-                    Este perfil es ilustrativo. El nombre, la historia y la
-                    fotografía se reemplazarán con información autorizada de la
-                    integrante.
-                  </p>
+                  <p className="py-5 text-lg ">“{m.quote}”</p>
+
                 </DialogContent>
               </Dialog>
             ))}
@@ -207,11 +200,14 @@ export function TestimonialsSection() {
     <section id="testimonios" className="section bg-muted">
       <div className="wrap">
         <ScrollReveal>
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p className="eyebrow mb-4">Voces de nuestra comunidad</p>
-              <h2 className="section-title">Se siente. Se comparte.</h2>
-              <div className="mt-6 flex items-center gap-4 sm:hidden">
+          <div className="mb-10">
+            <div className="flex w-full flex-col text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
+              <div>
+                <p className="eyebrow mb-4">Voces de nuestra comunidad</p>
+                <h2 className="section-title">Se siente. Se comparte.</h2>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-4 sm:hidden">
                 <Button
                   type="button"
                   variant="outline"
@@ -233,28 +229,28 @@ export function TestimonialsSection() {
                   <ChevronRight className="size-7" />
                 </Button>
               </div>
-            </div>
-            <div className="hidden items-center gap-3 sm:flex">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                aria-label="Ver testimonio anterior"
-                onClick={() => moveTo(currentIndex - 1)}
-                className="size-11 rounded-full border-secondary bg-white hover:bg-primary"
-              >
-                <ChevronLeft className="size-5" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                aria-label="Ver siguiente testimonio"
-                onClick={() => moveTo(currentIndex + 1)}
-                className="size-11 rounded-full border-secondary bg-white hover:bg-primary"
-              >
-                <ChevronRight className="size-5" />
-              </Button>
+              <div className="hidden items-center gap-3 sm:flex">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Ver testimonio anterior"
+                  onClick={() => moveTo(currentIndex - 1)}
+                  className="size-11 rounded-full border-secondary bg-white hover:bg-primary"
+                >
+                  <ChevronLeft className="size-5" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Ver siguiente testimonio"
+                  onClick={() => moveTo(currentIndex + 1)}
+                  className="size-11 rounded-full border-secondary bg-white hover:bg-primary"
+                >
+                  <ChevronRight className="size-5" />
+                </Button>
+              </div>
             </div>
           </div>
           <div
@@ -309,7 +305,7 @@ export function SocialSection() {
     <section id="redes" className="section">
       <div className="wrap">
         <ScrollReveal>
-          <div className="mb-10 grid gap-6 md:grid-cols-2">
+          <div className="mb-10 grid gap-6 md:grid-cols-2 text-center lg:text-left">
             <div>
               <p className="eyebrow mb-4">Soy celeste, soy celeste…</p>
               <h2 className="section-title">Nos vemos en redes.</h2>
@@ -355,7 +351,7 @@ export function FAQSection() {
     <section id="faq" className="section border-t">
       <div className="wrap grid gap-10 lg:grid-cols-[.85fr_1.15fr]">
         <ScrollReveal direction="left">
-          <div>
+          <div className="text-center lg:text-left">
             <p className="eyebrow mb-4">Resolvemos tus dudas</p>
             <h2 className="section-title">
               Antes del

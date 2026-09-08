@@ -23,6 +23,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
     defaultValues: {
       name: "",
       email: "",
+      whatsapp: "",
       message: "",
       consent: false,
       website: "",
@@ -69,10 +70,10 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
         }
       })}
       noValidate
-      className="py-4 lg:px-8"
+      className="py-4 text-center lg:text-left lg:px-8 "
     >
       <p className="eyebrow mb-3">Hablemos</p>
-      <h3 className="font-display text-4xl font-semibold uppercase leading-11">
+      <h3 className="font-display text-[22px] lg:text-4xl font-semibold uppercase leading-11">
         Tu mensaje es el comienzo.
       </h3>
 
@@ -115,6 +116,28 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
           {errors.email && (
             <p id="email-error" className="mt-1 text-sm text-destructive">
               {errors.email.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <Label htmlFor="whatsapp" className="mb-2">
+            WhatsApp <span className="text-muted-foreground">(opcional)</span>
+          </Label>
+          <Input
+            id="whatsapp"
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            placeholder="+51 999 999 999"
+            maxLength={24}
+            className="h-12 bg-white"
+            aria-invalid={!!errors.whatsapp}
+            aria-describedby={errors.whatsapp ? "whatsapp-error" : undefined}
+            {...register("whatsapp")}
+          />
+          {errors.whatsapp && (
+            <p id="whatsapp-error" className="mt-1 text-sm text-destructive">
+              {errors.whatsapp.message}
             </p>
           )}
         </div>
@@ -170,13 +193,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
               {errors.consent.message}
             </p>
           )}
-          <p
-            id="privacy-note"
-            className="mt-3 text-xs leading-relaxed text-muted-foreground"
-          >
-            Usaremos tu nombre, correo y mensaje únicamente para atender tu
-            consulta. No te suscribiremos a publicidad.
-          </p>
+
         </div>
         <Button
           type="submit"

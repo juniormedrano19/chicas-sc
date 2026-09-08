@@ -63,7 +63,7 @@ export function Footer() {
             </nav>
           </div>
         </div>
-        <div className="flex flex-wrap justify-between gap-4 pt-7 text-sm text-white">
+        <div className="flex flex-col items-center gap-4 pt-7 text-center text-sm text-white md:flex-row md:justify-between md:text-left">
           <p>
             © {new Date().getFullYear()} Chicas SC. Hecho con pasión celeste.
           </p>

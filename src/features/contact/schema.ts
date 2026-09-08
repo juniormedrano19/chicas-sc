@@ -9,6 +9,11 @@ export const contactSchema = z.object({
     .email("Escribe un correo válido.")
     .max(254)
     .transform((v) => v.toLowerCase().trim()),
+  whatsapp: z
+    .string()
+    .trim()
+    .max(24, "Máximo 24 caracteres.")
+    .regex(/^[+\d\s()-]*$/, "Escribe un número de WhatsApp válido."),
   message: z
     .string()
     .trim()

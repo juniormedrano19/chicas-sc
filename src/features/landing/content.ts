@@ -20,7 +20,7 @@ export const members: Member[] = [
     role: "Coordinación",
     initials: "VA",
     number: "01",
-    quote: "La celeste se lleva en el corazón.",
+    quote: "La celeste nació conmigo y se lleva en el corazón. Gracias a Sporting Cristal por darme tantas alegrías. En las buenas y malas siempre. Fuerza Cristal!!",
     image:"/images/integrantes/laura.jpeg"
   },
   {

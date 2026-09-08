@@ -60,12 +60,13 @@ export async function POST(request: Request) {
       { error: "El canal de contacto todavía no está habilitado." },
       { status: 503 },
     );
-  const { name, email, message } = parsed.data;
+  const { name, email, message, whatsapp } = parsed.data;
   try {
     const { data, error } = await db.rpc("submit_contact", {
       p_name: name,
       p_email: email,
       p_message: message,
+      p_whatsapp: whatsapp || null,
     });
     if (error)
       return NextResponse.json(

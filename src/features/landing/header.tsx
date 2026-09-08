@@ -45,12 +45,15 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 aria-label="Abrir menú"
-                className="size-11 shrink-0 xl:hidden"
+                className="size-11 shrink-0 xl:hidden hover:bg-primary"
               >
-                <Menu />
+                <Menu className="text-white size-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="overflow-y-auto">
+            <SheetContent
+              className="overflow-y-auto"
+              onCloseAutoFocus={(event) => event.preventDefault()}
+            >
               <SheetTitle className="px-6 pt-8">Chicas SC</SheetTitle>
               <nav
                 className="flex flex-col gap-2 p-6"
@@ -60,7 +63,7 @@ export function Header() {
                   (x) => (
                     <a
                       href={x.href}
-                      className="flex min-h-11 items-center py-2"
+                      className="flex min-h-11 items-center py-2 hover:text-primary"
                       key={x.href}
                       onClick={() => setMenuOpen(false)}
                     >

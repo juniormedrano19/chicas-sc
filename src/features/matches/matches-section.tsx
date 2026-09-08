@@ -58,18 +58,18 @@ export function MatchesSection() {
     >
       <div className="wrap">
         <ScrollReveal>
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div>
+          <div className="mb-8">
+            <div className="flex w-full flex-col items-center justify-center gap-4  lg:flex-row lg:items-start lg:justify-between">
               <h2 className="section-title">
                 Últimos partidos
               </h2>
               {matches.length > 0 && (
-                <div className="mt-6 flex items-center gap-4 sm:hidden" aria-label="Navegación de partidos">
+                <div className="mt-0 sm:mt-6 flex items-center gap-4 sm:hidden" aria-label="Navegación de partidos">
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
-                    className="size-14 rounded-full border-primary bg-white text-primary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
+                    className="size-14 rounded-full border-secondary bg-white text-secondary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
                     onClick={() => setStartIndex((current) => Math.max(0, current - 1))}
                     disabled={!canGoBack}
                     aria-label="Ver partidos anteriores"
@@ -80,7 +80,7 @@ export function MatchesSection() {
                     type="button"
                     variant="outline"
                     size="icon"
-                    className="size-14 rounded-full border-primary bg-white text-primary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
+                    className="size-14 rounded-full border-secondary bg-white text-secondary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
                     onClick={() => setStartIndex((current) => Math.min(matches.length - 1, current + 1))}
                     disabled={!canGoForwardOnMobile}
                     aria-label="Ver próximos partidos"
@@ -89,34 +89,33 @@ export function MatchesSection() {
                   </Button>
                 </div>
               )}
+              {matches.length > 0 && (
+                <div className="hidden items-center gap-3 sm:flex" aria-label="Navegación de partidos">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="size-11 rounded-full border-secondary bg-white text-secondary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
+                    onClick={() => setStartIndex((current) => Math.max(0, current - 1))}
+                    disabled={!canGoBack}
+                    aria-label="Ver partidos anteriores"
+                  >
+                    <ChevronLeft className="size-5" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="size-11 rounded-full border-secondary bg-white text-secondary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
+                    onClick={() => setStartIndex((current) => Math.min(matches.length - VISIBLE_MATCHES, current + 1))}
+                    disabled={!canGoForward}
+                    aria-label="Ver próximos partidos"
+                  >
+                    <ChevronRight className="size-5" />
+                  </Button>
+                </div>
+              )}
             </div>
-            {matches.length > 0 && (
-              <div className="hidden items-center gap-3 sm:flex" aria-label="Navegación de partidos">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-11 rounded-full border-primary bg-white text-primary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
-                  onClick={() => setStartIndex((current) => Math.max(0, current - 1))}
-                  disabled={!canGoBack}
-                  aria-label="Ver partidos anteriores"
-                >
-                  <ChevronLeft className="size-5" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-11 rounded-full border-primary bg-white text-primary shadow-none hover:bg-primary hover:text-white disabled:opacity-35"
-                  onClick={() => setStartIndex((current) => Math.min(matches.length - VISIBLE_MATCHES, current + 1))}
-                  disabled={!canGoForward}
-                  aria-label="Ver próximos partidos"
-                >
-                  <ChevronRight className="size-5" />
-                </Button>
-              </div>
-            )}
-
           </div>
           <div key={startIndex} className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-4">
             {visibleMatches.map((m, index) => (

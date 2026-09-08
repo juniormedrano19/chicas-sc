@@ -42,8 +42,8 @@ export default function Home() {
         <AlbumsSection albums={albums} />
         <SocialSection />
         <FAQSection />
-        <section id="contacto" className="section bg-muted/60">
-          <div className="wrap grid gap-10 lg:grid-cols-2">
+        <section id="contacto" className="section overflow-x-clip bg-muted/60">
+          <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <ScrollReveal direction="left" className="h-full">
               <ContactIntro />
             </ScrollReveal>
@@ -53,7 +53,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <div className="h-[400px] w-full bg-[url('/images/history.jpg')] bg-cover">
+      <div className="aspect-[21/5] w-full bg-muted bg-[url('/images/history.jpg')] bg-contain bg-center bg-no-repeat sm:h-[400px] sm:aspect-auto sm:bg-cover">
       </div>
       <Footer />
     </>

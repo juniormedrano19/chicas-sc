@@ -18,8 +18,8 @@ export function AlbumsSection({ albums }: { albums: Album[] }) {
     <section id="recuerdos" className="section bg-secondary text-white">
       <div className="wrap">
         <ScrollReveal>
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-            <div>
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-6 ">
+            <div className="text-center lg:text-left  w-full">
               <p className="eyebrow mb-4 text-primary">Momentos que se quedan</p>
               <h2 className="section-title">Nuestros recuerdos<span className="text-accent">.</span></h2>
             </div>

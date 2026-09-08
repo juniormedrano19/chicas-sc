@@ -55,9 +55,11 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: clip;
     overflow-wrap: anywhere;
   }
   button,
@@ -112,8 +114,7 @@
     @apply font-display font-bold uppercase leading-[1] tracking-[-.010em];
   }
   .section-title {
-    @apply font-display font-bold uppercase leading-[1.20] tracking-tight;
-    font-size: 36px;
+    @apply font-display font-bold uppercase leading-[1.20] tracking-tight text-[22px] lg:text-[36px];
     text-wrap: balance;
   }
   .pill-link {

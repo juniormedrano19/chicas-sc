@@ -83,6 +83,7 @@ when rendering a match card.
 {
   name: string,
   email: string,
+  whatsapp: string | null,
   message: string,
   consentAt: Timestamp,
   status: "new" | "read" | "replied" | "archived",
