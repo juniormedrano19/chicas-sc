@@ -10,7 +10,7 @@ export function Brand() {
         width={1080}
         height={1080}
         sizes="(min-width: 640px) 80px, 64px"
-        className="size-16 object-contain drop-shadow-[0_1px_1px_rgba(0,46,121,0.28)] sm:size-24"
+        className="size-20 object-contain drop-shadow-[0_1px_1px_rgba(0,46,121,0.28)] sm:size-24"
       />
     </Link>
   );

@@ -1,0 +1,10 @@
+export { Header } from "./header";
+export { Hero } from "./hero";
+export { ChicasSCBanner } from "./chicas-sc-banner";
+export { AboutSection } from "./components/about-section";
+export { MembersSection } from "./components/members-section";
+export { TestimonialsSection } from "./components/testimonials-section";
+export { SocialSection } from "./components/social-section";
+export { FAQSection } from "./components/faq-section";
+export { ContactIntro } from "./components/contact-intro";
+export { Footer } from "./footer";

@@ -1,79 +1,43 @@
 "use client";
-import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { contactSchema, type ContactInput } from "./schema";
-export function ContactForm({ enabled }: { enabled: boolean }) {
+import { useContactForm } from "./hooks/use-contact-form";
+
+export interface ContactFormProps {
+  enabled: boolean;
+}
+
+export function ContactForm({ enabled }: ContactFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
-    control,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactInput>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      whatsapp: "",
-      message: "",
-      consent: false,
-      website: "",
-    },
-  });
-  const consent = useWatch({ control, name: "consent" });
-  const [sent, setSent] = useState(false);
-  const submit = async (values: ContactInput) => {
-    setSent(false);
-    if (!enabled) {
-      toast.info("El canal de contacto todavía no está habilitado.");
-      return;
-    }
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(
-          data.error || "No pudimos enviar tu mensaje. Intenta de nuevo.",
-        );
-      toast.success("¡Mensaje recibido! Gracias por escribirnos.");
-      reset();
-      setSent(true);
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "No pudimos enviar tu mensaje.",
-      );
-      throw error;
-    }
-  };
+    consent,
+    sent,
+    errors,
+    isSubmitting,
+    onSubmit,
+  } = useContactForm({ enabled });
+
   return (
     <form
       onSubmit={handleSubmit(async (v) => {
         try {
-          await submit(v);
+          await onSubmit(v);
         } catch {
-          /* The toast reports failure; preserve the draft. */
+          /* The toast reports failure; preserve draft. */
         }
       })}
       noValidate
-      className="py-4 text-center lg:text-left lg:px-8 "
+      className="py-4 text-center lg:px-8 lg:text-left"
     >
       <p className="eyebrow mb-3">Hablemos</p>
-      <h3 className="font-display text-[22px] lg:text-4xl font-semibold uppercase leading-11">
+      <h3 className="font-display text-[22px] font-semibold uppercase leading-11 lg:text-4xl">
         Tu mensaje es el comienzo.
       </h3>
 
@@ -98,6 +62,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             </p>
           )}
         </div>
+
         <div>
           <Label htmlFor="email" className="mb-2">
             Tu correo electrónico
@@ -119,9 +84,10 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             </p>
           )}
         </div>
+
         <div>
           <Label htmlFor="whatsapp" className="mb-2">
-            WhatsApp <span className="text-muted-foreground">(opcional)</span>
+            Número de WhatsApp
           </Label>
           <Input
             id="whatsapp"
@@ -141,6 +107,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             </p>
           )}
         </div>
+
         <div>
           <Label htmlFor="message" className="mb-2">
             ¿Qué tienes en mente?
@@ -150,7 +117,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             placeholder="Quiero ser parte de Chicas SC…"
             rows={4}
             maxLength={2000}
-            className="min-h-28 bg-white"
+            className="min-h-28 bg-white resize-none"
             aria-invalid={!!errors.message}
             aria-describedby={errors.message ? "message-error" : undefined}
             {...register("message")}
@@ -161,6 +128,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             </p>
           )}
         </div>
+
         <div className="hidden" aria-hidden="true">
           <label htmlFor="website">Sitio web</label>
           <Input
@@ -170,6 +138,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             {...register("website")}
           />
         </div>
+
         <div>
           <div className="flex items-start gap-3">
             <Checkbox
@@ -193,8 +162,8 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
               {errors.consent.message}
             </p>
           )}
-
         </div>
+
         <Button
           type="submit"
           disabled={isSubmitting || !enabled}
@@ -212,6 +181,7 @@ export function ContactForm({ enabled }: { enabled: boolean }) {
             </>
           )}
         </Button>
+
         {sent && enabled && (
           <p role="status" className="text-sm">
             ¡Mensaje recibido! Gracias por escribirnos.

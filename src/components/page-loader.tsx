@@ -1,22 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { LoadingIndicator } from "@/components/loading-indicator";
+import { usePageLoader } from "./hooks/use-page-loader";
 
 export function PageLoader() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const hideLoader = () => window.setTimeout(() => setIsVisible(false), 1000);
-
-    if (document.readyState === "complete") {
-      hideLoader();
-      return;
-    }
-
-    window.addEventListener("load", hideLoader, { once: true });
-    return () => window.removeEventListener("load", hideLoader);
-  }, []);
+  const { isVisible } = usePageLoader(1000);
 
   if (!isVisible) return null;
 

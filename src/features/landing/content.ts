@@ -1,9 +1,9 @@
 export const navLinks = [
-  { label: "Quiénes somos", href: "#quienes-somos" },
-  { label: "Nosotras", href: "#nosotras" },
-  { label: "Partidos", href: "#partidos" },
-  { label: "Recuerdos", href: "#recuerdos" },
-  { label: "Comunidad", href: "#redes" },
+  { label: "Quiénes somos", href: "/#quienes-somos" },
+  { label: "Nosotras", href: "/#nosotras" },
+  { label: "Partidos", href: "/#partidos" },
+  { label: "Recuerdos", href: "/#recuerdos" },
+  { label: "Comunidad", href: "/#redes" },
 ];
 export type Member = {
   name: string;

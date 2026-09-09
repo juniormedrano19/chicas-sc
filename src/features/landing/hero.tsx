@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { PaintReveal, ParallaxLayer } from "@/components/motion/scroll-reveal";
+import { motion } from "framer-motion";
+import { ParallaxLayer } from "@/components/motion/scroll-reveal";
+import { useHeroSlider } from "./hooks/use-hero-slider";
 
 const mobileHeroSlides = [
   {
@@ -14,7 +14,6 @@ const mobileHeroSlides = [
     src: "/images/hero/hero2.png",
     alt: "Integrantes de Chicas SC compartiendo su pasión por Sporting Cristal",
   },
-
   {
     src: "/images/hero/hero4.jpg",
     alt: "Integrantes de Chicas SC compartiendo su pasión por Sporting Cristal",
@@ -22,69 +21,88 @@ const mobileHeroSlides = [
   {
     src: "/images/hero/hero5.png",
     alt: "Integrante de Chicas SC con la camiseta celeste",
-  }
+  },
 ] as const;
 
 export function Hero() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % mobileHeroSlides.length);
-    }, 5000);
-
-    return () => window.clearInterval(interval);
-  }, []);
+  const { slides, selectSlide, prefersReducedMotion } = useHeroSlider(
+    mobileHeroSlides.length,
+    5000,
+  );
 
   return (
     <div id="inicio">
+      {/* Mobile Hero Slider */}
       <section
         aria-label="Galería de Chicas SC"
-        className="relative isolate flex min-h-[100svh] overflow-hidden bg-secondary sm:hidden"
+        className="relative isolate flex min-h-[100svh] overflow-hidden bg-black sm:hidden"
       >
-        <AnimatePresence initial={false} mode="sync">
-          <motion.div
-            key={mobileHeroSlides[activeSlide].src}
-            className="absolute inset-0"
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.035 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 1.015 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Image
-              src={mobileHeroSlides[activeSlide].src}
-              alt={mobileHeroSlides[activeSlide].alt}
-              fill
-              priority={activeSlide === 0}
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          </motion.div>
-        </AnimatePresence>
+        {mobileHeroSlides.map((slide, index) => {
+          const isCurrent = index === slides.current;
+          const isPrev = index === slides.prev;
+
+          return (
+            <motion.div
+              key={slide.src}
+              className="absolute inset-0"
+              style={{
+                zIndex: isCurrent ? 20 : isPrev ? 10 : 0,
+                pointerEvents: isCurrent ? "auto" : "none",
+              }}
+              initial={false}
+              animate={{
+                opacity: isCurrent ? 1 : isPrev ? 1 : 0,
+                scale: isCurrent ? 1 : 1.04,
+              }}
+              transition={{
+                opacity: {
+                  duration: prefersReducedMotion ? 0 : 0.85,
+                  ease: "easeInOut",
+                },
+                scale: {
+                  duration: prefersReducedMotion ? 0 : 1.2,
+                  ease: [0.22, 1, 0.36, 1],
+                },
+              }}
+            >
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+            </motion.div>
+          );
+        })}
+
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/45 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1/3 bg-linear-to-t from-black/50 to-transparent"
         />
-        <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3">
+
+        <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3">
           {mobileHeroSlides.map((slide, index) => (
             <motion.button
               key={slide.src}
               type="button"
               aria-label={`Mostrar imagen ${index + 1}`}
-              aria-current={index === activeSlide ? "true" : undefined}
+              aria-current={index === slides.current ? "true" : undefined}
               className="h-2.5 rounded-full bg-white"
-              animate={{ width: index === activeSlide ? "2rem" : "0.625rem", opacity: index === activeSlide ? 1 : 0.6 }}
+              animate={{
+                width: index === slides.current ? "2rem" : "0.625rem",
+                opacity: index === slides.current ? 1 : 0.5,
+              }}
               transition={{ duration: 0.3 }}
-              onClick={() => setActiveSlide(index)}
+              onClick={() => selectSlide(index)}
             />
           ))}
         </div>
       </section>
 
-      <section
-        className="relative isolate hidden min-h-[100svh] overflow-hidden bg-secondary sm:flex"
-      >
+      {/* Desktop Hero */}
+      <section className="relative isolate hidden min-h-[100svh] overflow-hidden bg-secondary sm:flex">
         <div className="flex min-h-[100svh] w-full flex-1">
           <div className="relative flex min-h-[100svh] w-full overflow-hidden bg-white">
             <ParallaxLayer
@@ -109,30 +127,5 @@ export function Hero() {
         </div>
       </section>
     </div>
-  );
-}
-
-export function PassionIntro() {
-  return (
-    <PaintReveal className="text-secondary">
-      <div className="wrap flex min-h-[min(48rem,100svh)] flex-col py-16 sm:py-20 lg:py-24 ">
-
-        {/* font-[family-name:var(--font-sacramento)] */}
-
-        <h2 className="font-[family-name:var(--font-sacramento)] text-[100px] font-normal leading-[.95] tracking-normal text-white">
-          &ldquo;Somos la fuerza ganadora
-
-          siempre <span className="text-secondary [-webkit-text-stroke:2px_#fff] [paint-order:stroke_fill]">campeones  </span> siempre primeros, [...] , la actitud positiva que tenemos hará que siempre seamos      <span className="text-secondary [-webkit-text-stroke:2px_#fff] [paint-order:stroke_fill]">campeones  </span>...&rdquo;
-
-
-
-        </h2>
-
-
-
-
-
-      </div>
-    </PaintReveal>
   );
 }

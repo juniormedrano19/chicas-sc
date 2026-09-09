@@ -33,7 +33,7 @@ export default async function AlbumPage({ params }: Props) {
 
   return (
     <main className="min-h-dvh bg-muted/50 pb-16">
-      <header className="bg-secondary py-8 text-white sm:py-12">
+      <header className="bg-primary py-8 text-white sm:py-12">
         <div className="wrap">
           <div className="mb-10 flex flex-wrap items-center justify-between gap-5">
             <Brand />

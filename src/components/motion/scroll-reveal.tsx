@@ -6,7 +6,6 @@ import {
   useInView,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -17,21 +16,10 @@ type ScrollRevealProps = {
   direction?: "up" | "left" | "right";
 };
 
-type PaintRevealProps = {
-  children: ReactNode;
-  className?: string;
-  id?: string;
-};
-
 type ParallaxLayerProps = {
   className?: string;
   imageUrl: string;
 };
-
-const PAINT_FRONT_START =
-  "M0 0H1000V-80C940-80 940-25 875-25C810-25 810-110 730-110C650-110 650-35 570-35C490-35 490-100 410-100C330-100 330-35 250-35C170-35 170-90 90-90C45-90 45-45 0-45Z";
-const PAINT_FRONT_END =
-  "M0 0H1000V1200C940 1200 940 1250 875 1250C810 1250 810 1170 730 1170C650 1170 650 1260 570 1260C490 1260 490 1180 410 1180C330 1180 330 1265 250 1265C170 1265 170 1195 90 1195C45 1195 45 1240 0 1240Z";
 
 /**
  * Reveals content whenever it enters the viewport. Framer Motion handles the
@@ -79,61 +67,6 @@ export function ScrollReveal({
         {children}
       </motion.div>
     </div>
-  );
-}
-
-export function PaintReveal({ children, className, id }: PaintRevealProps) {
-  const ref = useRef<HTMLElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "start start"],
-  });
-  const paintProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 24,
-    mass: 0.45,
-  });
-  const paintPath = useTransform(
-    paintProgress,
-    [0, 0.7],
-    [PAINT_FRONT_START, PAINT_FRONT_END],
-  );
-  const contentOpacity = useTransform(paintProgress, [0.32, 0.64], [0, 1]);
-  const contentY = useTransform(paintProgress, [0.32, 0.64], [28, 0]);
-
-  return (
-    <section
-      ref={ref}
-      id={id}
-      className={cn("relative isolate overflow-hidden", className)}
-    >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1000 1000"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-      >
-        <motion.path
-          fill="var(--primary)"
-          initial={false}
-          animate={prefersReducedMotion ? { d: PAINT_FRONT_END } : undefined}
-          style={prefersReducedMotion ? undefined : { d: paintPath }}
-        />
-      </svg>
-      <motion.div
-        className="relative z-10 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-700"
-        initial={false}
-        animate={prefersReducedMotion ? { opacity: 1, y: 0 } : undefined}
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { opacity: contentOpacity, y: contentY }
-        }
-      >
-        {children}
-      </motion.div>
-    </section>
   );
 }
 
