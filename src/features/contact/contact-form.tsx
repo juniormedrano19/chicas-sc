@@ -9,10 +9,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useContactForm } from "./hooks/use-contact-form";
 
 export interface ContactFormProps {
-  enabled: boolean;
+  enabled?: boolean;
 }
 
-export function ContactForm({ enabled }: ContactFormProps) {
+export function ContactForm({ enabled = true }: ContactFormProps) {
   const {
     register,
     handleSubmit,
@@ -20,7 +20,9 @@ export function ContactForm({ enabled }: ContactFormProps) {
     consent,
     sent,
     errors,
+    clearErrors,
     isSubmitting,
+    isValid,
     onSubmit,
   } = useContactForm({ enabled });
 
@@ -30,7 +32,7 @@ export function ContactForm({ enabled }: ContactFormProps) {
         try {
           await onSubmit(v);
         } catch {
-          /* The toast reports failure; preserve draft. */
+          /* Sonner muestra el error; se preserva el borrador */
         }
       })}
       noValidate
@@ -44,13 +46,14 @@ export function ContactForm({ enabled }: ContactFormProps) {
       <div className="mt-7 space-y-5">
         <div>
           <Label htmlFor="name" className="mb-2">
-            ¿Cómo te llamas?
+            ¿Cómo te llamas? (*)
           </Label>
           <Input
             id="name"
             autoComplete="name"
             placeholder="Tu nombre"
             maxLength={80}
+            disabled={isSubmitting}
             className="h-12 bg-white"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "name-error" : undefined}
@@ -65,7 +68,7 @@ export function ContactForm({ enabled }: ContactFormProps) {
 
         <div>
           <Label htmlFor="email" className="mb-2">
-            Tu correo electrónico
+            Tu correo electrónico (*)
           </Label>
           <Input
             id="email"
@@ -73,6 +76,7 @@ export function ContactForm({ enabled }: ContactFormProps) {
             autoComplete="email"
             placeholder="hola@ejemplo.com"
             maxLength={254}
+            disabled={isSubmitting}
             className="h-12 bg-white"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
@@ -87,7 +91,7 @@ export function ContactForm({ enabled }: ContactFormProps) {
 
         <div>
           <Label htmlFor="whatsapp" className="mb-2">
-            Número de WhatsApp
+            Número de celular / WhatsApp (*)
           </Label>
           <Input
             id="whatsapp"
@@ -96,6 +100,7 @@ export function ContactForm({ enabled }: ContactFormProps) {
             inputMode="tel"
             placeholder="+51 999 999 999"
             maxLength={24}
+            disabled={isSubmitting}
             className="h-12 bg-white"
             aria-invalid={!!errors.whatsapp}
             aria-describedby={errors.whatsapp ? "whatsapp-error" : undefined}
@@ -110,14 +115,15 @@ export function ContactForm({ enabled }: ContactFormProps) {
 
         <div>
           <Label htmlFor="message" className="mb-2">
-            ¿Qué tienes en mente?
+            ¿Qué tienes en mente? (*)
           </Label>
           <Textarea
             id="message"
             placeholder="Quiero ser parte de Chicas SC…"
             rows={4}
             maxLength={2000}
-            className="min-h-28 bg-white resize-none"
+            disabled={isSubmitting}
+            className="min-h-28 bg-white"
             aria-invalid={!!errors.message}
             aria-describedby={errors.message ? "message-error" : undefined}
             {...register("message")}
@@ -140,24 +146,29 @@ export function ContactForm({ enabled }: ContactFormProps) {
         </div>
 
         <div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-center gap-2">
             <Checkbox
               id="consent"
               checked={consent}
-              onCheckedChange={(v) =>
-                setValue("consent", v === true, { shouldValidate: true })
-              }
-              aria-invalid={!!errors.consent}
+              disabled={isSubmitting}
+              onCheckedChange={(v) => {
+                const isChecked = v === true;
+                setValue("consent", isChecked, { shouldValidate: true });
+                if (!isChecked) {
+                  clearErrors("consent");
+                }
+              }}
+              aria-invalid={!sent && !!errors.consent}
               aria-describedby="privacy-note"
             />
             <Label
               htmlFor="consent"
               className="text-sm font-normal leading-relaxed"
             >
-              Autorizo el uso de mis datos para responder a este mensaje.
+              Autorizo el uso de mis datos para responder a este mensaje. (*)
             </Label>
           </div>
-          {errors.consent && (
+          {!sent && errors.consent && (
             <p className="mt-1 text-sm text-destructive">
               {errors.consent.message}
             </p>
@@ -166,24 +177,25 @@ export function ContactForm({ enabled }: ContactFormProps) {
 
         <Button
           type="submit"
-          disabled={isSubmitting || !enabled}
+          disabled={!isValid || isSubmitting || !enabled}
           size="lg"
-          className="w-full rounded-full bg-secondary text-white hover:bg-secondary/90"
+          className="w-full rounded-full bg-secondary text-white hover:bg-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {isSubmitting ? (
-            <>
-              <LoaderCircle className="animate-spin" />
-              Enviando…
-            </>
+            <span className="inline-flex items-center gap-2">
+              <LoaderCircle className="size-5 animate-spin" />
+              <span>Enviando mensaje…</span>
+            </span>
           ) : (
-            <>
-              Enviar mensaje <ArrowRight />
-            </>
+            <span className="inline-flex items-center gap-2">
+              <span>Enviar mensaje</span>
+              <ArrowRight className="size-4" />
+            </span>
           )}
         </Button>
 
         {sent && enabled && (
-          <p role="status" className="text-sm">
+          <p role="status" className="text-sm font-medium text-secondary">
             ¡Mensaje recibido! Gracias por escribirnos.
           </p>
         )}

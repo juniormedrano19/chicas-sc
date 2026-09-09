@@ -5,6 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { contactSchema, type ContactInput } from "../schema";
+import { contactRepository } from "../repository";
 
 export interface UseContactFormProps {
   enabled: boolean;
@@ -19,9 +20,11 @@ export function useContactForm({ enabled }: UseContactFormProps) {
     setValue,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    clearErrors,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       email: "",
@@ -37,46 +40,61 @@ export function useContactForm({ enabled }: UseContactFormProps) {
   const onSubmit = useCallback(
     async (values: ContactInput) => {
       setSent(false);
+
       if (!enabled) {
-        toast.info("El canal de contacto todavía no está habilitado.");
+        toast.info("El canal de contacto todavía no está habilitado.", {
+          position: "top-right",
+          duration: 4000,
+        });
         return;
       }
+
       try {
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
+        // Pausa visible para que el spinner dé feedback claro
+        await Promise.all([
+          contactRepository.submit(values),
+          new Promise((resolve) => setTimeout(resolve, 1800)),
+        ]);
+
+        toast.success("¡Mensaje enviado con éxito!", {
+          description: "Gracias por escribirnos. Nos pondremos en contacto contigo pronto.",
+          position: "top-right",
+          duration: 7000,
         });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(
-            data.error || "No pudimos enviar tu mensaje. Intenta de nuevo.",
-          );
-        }
-        toast.success("¡Mensaje recibido! Gracias por escribirnos.");
-        reset();
+
+        reset({
+          name: "",
+          email: "",
+          whatsapp: "",
+          message: "",
+          consent: false,
+          website: "",
+        });
+        clearErrors();
         setSent(true);
       } catch (error) {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "No pudimos enviar tu mensaje.",
-        );
+        console.error("Error al enviar mensaje a Firebase:", error);
+        toast.error("No pudimos enviar tu mensaje.", {
+          description: "Por favor revisa tu conexión o intenta nuevamente en unos minutos.",
+          position: "top-right",
+          duration: 6000,
+        });
         throw error;
       }
     },
-    [enabled, reset],
+    [enabled, reset, clearErrors],
   );
 
   return {
     register,
     handleSubmit,
     setValue,
-    control,
     consent,
     sent,
     errors,
+    clearErrors,
     isSubmitting,
+    isValid,
     onSubmit,
   };
 }

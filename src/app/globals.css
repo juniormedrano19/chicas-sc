@@ -72,8 +72,8 @@
     cursor: pointer;
   }
   ::selection {
-    background: #fedb01;
-    color: #1B265C;
+    background: var(--primary);
+    color: #fff;
   }
   :focus-visible {
     outline: 3px solid #1B265C;

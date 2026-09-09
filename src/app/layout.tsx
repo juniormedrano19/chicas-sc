@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <PageLoader />
         {children}
-        <Toaster richColors position="bottom-right" />
+        <Toaster richColors position="top-right" duration={4000} closeButton />
       </body>
     </html>
   );

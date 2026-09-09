@@ -24,15 +24,25 @@ test("contact rejects missing consent and bot honeypot", () => {
   assert.equal(contactSchema.safeParse({ ...validContact, website: "https://spam.example" }).success, false);
 });
 
-test("contact rejects malformed email, empty messages and oversized payload fields", () => {
+test("contact enforces all required fields and minimum lengths with Zod", () => {
   for (const input of [
+    { name: "A" }, // menor a 2 caracteres
+    { name: "" },
     { email: "invalid-email" },
+    { email: "" },
+    { whatsapp: "12345" }, // menor a 9 dígitos
+    { whatsapp: "abcdefghi" }, // no numérico
+    { whatsapp: "" },
+    { message: "Hola" }, // menor a 10 caracteres
     { message: "   " },
     { message: "a".repeat(2001) },
     { name: "a".repeat(81) },
-    { whatsapp: "letras-invalidas" },
   ]) {
-    assert.equal(contactSchema.safeParse({ ...validContact, ...input }).success, false);
+    assert.equal(
+      contactSchema.safeParse({ ...validContact, ...input }).success,
+      false,
+      `Should fail for input: ${JSON.stringify(input)}`,
+    );
   }
 });
 
