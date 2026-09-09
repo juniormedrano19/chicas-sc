@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "seed:firestore": "node --experimental-strip-types scripts/seed-firestore.ts"
+    "seed:firestore": "node --experimental-strip-types scripts/seed-firestore.ts",
+    "seed:admin": "node --experimental-strip-types scripts/seed-admin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
+    "@tanstack/react-table": "^9.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cn": "^0.2.5",

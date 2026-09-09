@@ -123,7 +123,7 @@ export function ContactForm({ enabled = true }: ContactFormProps) {
             rows={4}
             maxLength={2000}
             disabled={isSubmitting}
-            className="min-h-28 bg-white"
+            className="min-h-28 bg-white resize-none"
             aria-invalid={!!errors.message}
             aria-describedby={errors.message ? "message-error" : undefined}
             {...register("message")}

@@ -1,9 +1,14 @@
-function LoadingBrand() {
+import { cn } from "cn";
+
+export function LoadingBrand({ className = "size-24 bg-primary sm:size-32" }: { className?: string }) {
   return (
     <div
       role="img"
       aria-label="Chicas SC"
-      className="size-24 bg-[#3CBEEF] sm:size-32 [mask-image:url('/images/chicas-sc-logo-transparent.png')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url('/images/chicas-sc-logo-transparent.png')] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]"
+      className={cn(
+        "bg-primary [mask-image:url('/images/chicas-sc-logo-transparent.png')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url('/images/chicas-sc-logo-transparent.png')] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]",
+        className,
+      )}
     />
   );
 }
