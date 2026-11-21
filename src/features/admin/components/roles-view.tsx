@@ -4,13 +4,13 @@ import { useState, useMemo } from "react";
 import {
   Search,
   ShieldPlus,
-  Shield,
   Edit2,
   Trash2,
   Users as UsersIcon,
 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminLegacyDialog } from "./admin-legacy-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -38,10 +38,8 @@ export function RolesView({
   onCreateRole,
   onUpdateRole,
   onDeleteRole,
-  onRefresh,
 }: RolesViewProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Modales
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -122,16 +120,10 @@ export function RolesView({
     setRoleToDelete(null);
   };
 
-  const handleManualRefresh = async () => {
-    setIsRefreshing(true);
-    await onRefresh();
-    setIsRefreshing(false);
-  };
-
   return (
     <div className="flex flex-col flex-1 min-h-0 bg-white">
       {/* Barra de herramientas */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 md:px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
         <div className="flex items-center gap-2 flex-1 max-w-md">
           <div className="relative w-full">
             <Search className="absolute left-2.5 top-2.5 size-3.5 text-slate-400" />
@@ -145,7 +137,7 @@ export function RolesView({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex max-w-full flex-wrap items-center gap-2 self-end sm:self-auto">
           <span className="text-xs text-slate-500 font-medium mr-1">
             {filteredRoles.length} {filteredRoles.length === 1 ? "rol" : "roles"}
           </span>
@@ -164,8 +156,8 @@ export function RolesView({
       </div>
 
       {/* Tabla de Roles con Shadcn */}
-      <div className="flex-1 overflow-y-auto">
-        <Table>
+      <div className="min-w-0 flex-1 overflow-y-auto">
+        <Table data-mobile-cards>
           <TableHeader>
             <TableRow>
               <TableHead className="w-24">ID</TableHead>
@@ -190,14 +182,14 @@ export function RolesView({
                 return (
                   <TableRow key={role.id} className="hover:bg-slate-50/70">
                     {/* ID */}
-                    <TableCell>
+                    <TableCell data-label="ID">
                       <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                         {role.id}
                       </span>
                     </TableCell>
 
                     {/* Nombre */}
-                    <TableCell>
+                    <TableCell data-label="Nombre">
                       <div className="flex items-center gap-2">
 
                         <span className="font-semibold text-slate-900 text-xs">{role.nombre}</span>
@@ -205,14 +197,14 @@ export function RolesView({
                     </TableCell>
 
                     {/* Descripción */}
-                    <TableCell>
+                    <TableCell data-label="Descripción">
                       <span className="text-xs text-slate-600">
                         {role.descripcion || <em className="text-slate-400">Sin descripción</em>}
                       </span>
                     </TableCell>
 
                     {/* Usuarios Asignados */}
-                    <TableCell>
+                    <TableCell data-label="Usuarios asignados">
                       <div className="flex items-center gap-1.5 text-xs text-slate-600">
                         <UsersIcon className="size-3.5 text-slate-400" />
                         <span>
@@ -222,7 +214,7 @@ export function RolesView({
                     </TableCell>
 
                     {/* Acciones */}
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" data-label="Acciones">
                       <div className="flex items-center justify-end gap-1.5">
                         <Button
                           variant="ghost"
@@ -257,8 +249,7 @@ export function RolesView({
 
       {/* Modal Crear Rol */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setIsCreateOpen(false)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-md" onClose={() => setIsCreateOpen(false)}>
           <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -325,13 +316,12 @@ export function RolesView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Editar Rol */}
       {editingRole && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setEditingRole(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-md" onClose={() => setEditingRole(null)}>
           <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -382,13 +372,12 @@ export function RolesView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Confirmar Eliminación */}
       {roleToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setRoleToDelete(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-sm" onClose={() => setRoleToDelete(null)}>
           <div className="relative w-full max-w-sm rounded-2xl bg-white shadow-2xl border border-slate-200 p-6 space-y-4">
             <h4 className="font-semibold text-slate-900 text-sm">¿Eliminar este rol?</h4>
             <p className="text-xs text-slate-600">
@@ -413,7 +402,7 @@ export function RolesView({
               </Button>
             </div>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
     </div>
   );

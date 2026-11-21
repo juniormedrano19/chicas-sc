@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, KeyRound, LoaderCircle, Lock, ShieldCheck, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { ArrowRight, KeyRound, LoaderCircle, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LoadingBrand } from "@/components/loading-indicator";
@@ -24,7 +24,7 @@ export function AdminLogin({ onLogin, loading, error }: AdminLoginProps) {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-primary text-white flex flex-col justify-between select-none">
+    <div data-admin-ui className="relative min-h-dvh w-full overflow-hidden bg-primary text-white flex flex-col justify-between select-none">
       {/* Luces y texturas de fondo ambientales */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 -left-32 size-96 rounded-full bg-secondary/30 blur-[130px]" />
@@ -47,7 +47,7 @@ export function AdminLogin({ onLogin, loading, error }: AdminLoginProps) {
       {/* Tarjeta central de inicio de sesión con logo grande */}
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          <div className="rounded-3xl border border-white/15 p-8 text-secondary backdrop-blur-2xl sm:p-10 bg-white">
+          <div className="rounded-3xl border border-white/15 p-6 text-secondary backdrop-blur-2xl md:p-10 bg-white">
             {/* Logo de Chicas SC en blanco grande */}
             <div className="flex flex-col items-center text-center">
               <div className="mb-5 flex size-28 items-center justify-center">
@@ -81,15 +81,15 @@ export function AdminLogin({ onLogin, loading, error }: AdminLoginProps) {
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     placeholder="Ej. CSC-2026"
-                    autoFocus
                     autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     disabled={loading}
-                    className="h-13 rounded-xl border bg-white pl-11 pr-11 text-base text-secondary  focus-visible:border-white focus-visible:ring-2 focus-visible:ring-secondary/50 text-sm"
+                    className="h-13 rounded-xl border bg-white pl-11 pr-11 text-base md:text-sm text-secondary focus-visible:border-white focus-visible:ring-2 focus-visible:ring-secondary/50"
                   />
                   <button
                     type="button"
                     onClick={() => setShowCode(!showCode)}
-                    tabIndex={-1}
                     aria-label={showCode ? "Ocultar código" : "Mostrar código"}
                     className="absolute inset-y-0 right-0 flex items-center pr-4 text-secondary hover:text-primary"
                   >
@@ -99,7 +99,7 @@ export function AdminLogin({ onLogin, loading, error }: AdminLoginProps) {
               </div>
 
               {error && (
-                <div className="flex items-start gap-2.5 rounded-xl border border-rose-500/40 bg-rose-500/15 p-3 text-xs text-rose-200">
+                <div role="alert" className="flex items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
                   <AlertCircle className="size-4 shrink-0 text-rose-400 mt-0.5" />
                   <span>{error}</span>
                 </div>

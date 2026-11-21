@@ -6,7 +6,6 @@ import {
   UserPlus,
   Edit2,
   Trash2,
-  Shield,
   Lock,
   Unlock,
   Key,
@@ -15,6 +14,7 @@ import {
 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminLegacyDialog } from "./admin-legacy-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -47,10 +47,8 @@ export function UsersView({
   onUpdateUser,
   onDeleteUser,
   onToggleBlock,
-  onRefresh,
 }: UsersViewProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   // Modales
@@ -148,16 +146,10 @@ export function UsersView({
     setUserToDelete(null);
   };
 
-  const handleManualRefresh = async () => {
-    setIsRefreshing(true);
-    await onRefresh();
-    setIsRefreshing(false);
-  };
-
   return (
     <div className="flex flex-col flex-1 min-h-0 bg-white">
       {/* Barra de herramientas */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 md:px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
         <div className="flex items-center gap-2 flex-1 max-w-md">
           <div className="relative w-full">
             <Search className="absolute left-2.5 top-2.5 size-3.5 text-slate-400" />
@@ -171,7 +163,7 @@ export function UsersView({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex max-w-full flex-wrap items-center gap-2 self-end sm:self-auto">
           <span className="text-xs text-slate-500 font-medium mr-1">
             {filteredUsers.length} {filteredUsers.length === 1 ? "usuario" : "usuarios"}
           </span>
@@ -190,8 +182,8 @@ export function UsersView({
       </div>
 
       {/* Tabla de Usuarios con Shadcn */}
-      <div className="flex-1 overflow-y-auto">
-        <Table>
+      <div className="min-w-0 flex-1 overflow-y-auto">
+        <Table data-mobile-cards>
           <TableHeader>
             <TableRow>
               <TableHead>Usuario</TableHead>
@@ -216,7 +208,7 @@ export function UsersView({
                 return (
                   <TableRow key={u.id} className="hover:bg-slate-50/70">
                     {/* Usuario & Avatar */}
-                    <TableCell>
+                    <TableCell data-label="Usuario">
                       <div className="flex items-center gap-3">
                         <UserAvatar
                           nombres={u.nombres}
@@ -242,7 +234,7 @@ export function UsersView({
                     </TableCell>
 
                     {/* Código de Acceso */}
-                    <TableCell>
+                    <TableCell data-label="Código de acceso">
                       <div className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#f4f5f7] border border-slate-200/80 font-mono text-xs text-slate-800">
                         <Key className="size-3 text-slate-400" />
                         <span>{u.codigo}</span>
@@ -262,7 +254,7 @@ export function UsersView({
                     </TableCell>
 
                     {/* Rol */}
-                    <TableCell>
+                    <TableCell data-label="Rol">
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
 
                         <span>{userRole?.nombre || `Rol ${u.idRol}`}</span>
@@ -270,7 +262,7 @@ export function UsersView({
                     </TableCell>
 
                     {/* Estado */}
-                    <TableCell>
+                    <TableCell data-label="Estado">
                       {u.isBlocked ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
                           <Lock className="size-3" />
@@ -285,7 +277,7 @@ export function UsersView({
                     </TableCell>
 
                     {/* Acciones */}
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" data-label="Acciones">
                       <div className="flex items-center justify-end gap-1.5">
                         {/* Bloquear / Desbloquear */}
                         {!isSelf && (
@@ -338,8 +330,7 @@ export function UsersView({
 
       {/* Modal Crear Usuario */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setIsCreateOpen(false)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-md" onClose={() => setIsCreateOpen(false)}>
           <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -444,13 +435,12 @@ export function UsersView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Editar Usuario */}
       {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setEditingUser(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-md" onClose={() => setEditingUser(null)}>
           <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -548,13 +538,12 @@ export function UsersView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Confirmar Eliminación */}
       {userToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setUserToDelete(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-sm" onClose={() => setUserToDelete(null)}>
           <div className="relative w-full max-w-sm rounded-2xl bg-white shadow-2xl border border-slate-200 p-6 space-y-4">
             <h4 className="font-semibold text-slate-900 text-sm">¿Eliminar este usuario?</h4>
             <p className="text-xs text-slate-600">
@@ -583,7 +572,7 @@ export function UsersView({
               </Button>
             </div>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
     </div>
   );

@@ -6,4 +6,4 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, noarchive: true },
 };
 
-export default function AdminLayout({ children }: { children: ReactNode }) { return children; }
+export default function AdminLayout({ children }: { children: ReactNode }) { return <div data-admin-ui>{children}</div>; }

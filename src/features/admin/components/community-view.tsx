@@ -54,7 +54,7 @@ export function CommunityView({ section }: { section: "members" | "testimonials"
     }
   }
 
-  return <div className="flex-1 overflow-y-auto p-6">
+  return <div className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div><h2 className="text-lg font-semibold">{isMembers ? "Integrantes" : "Testimonios"}</h2><p className="mt-1 text-sm text-muted-foreground">{isMembers ? "Gestiona sus perfiles y el orden en la comunidad." : "Comparte las historias de las integrantes."}</p></div>
       <Button disabled={resource.loading} onClick={() => setEditor({ type: section, record: null })}><Plus />{isMembers ? "Agregar integrante" : "Crear testimonio"}</Button>

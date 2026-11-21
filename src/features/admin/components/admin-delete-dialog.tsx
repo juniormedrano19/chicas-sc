@@ -15,7 +15,7 @@ export function AdminDeleteDialog({ open, onClose, onConfirm, title, description
   error?: string | null;
 }) {
   return <Dialog open={open} onOpenChange={(next) => { if (!next && !pending) onClose(); }}>
-    <DialogContent showCloseButton={!pending}>
+    <DialogContent data-admin-ui showCloseButton={!pending}>
       <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription></DialogHeader>
       <EditorError message={error} />
       <DialogFooter>

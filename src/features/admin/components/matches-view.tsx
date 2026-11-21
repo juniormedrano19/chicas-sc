@@ -14,6 +14,7 @@ import {
   FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminLegacyDialog } from "./admin-legacy-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -278,7 +279,7 @@ export function MatchesView({
   return (
     <div className="flex flex-col flex-1 min-h-0 bg-white">
       {/* Barra de herramientas */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 md:px-6 py-3.5 border-b border-[#f1f2f4] bg-white">
         <div className="flex items-center gap-2 flex-1 max-w-md">
           <div className="relative w-full">
             <Search className="absolute left-2.5 top-2.5 size-3.5 text-slate-400" />
@@ -292,7 +293,7 @@ export function MatchesView({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex max-w-full flex-wrap items-center gap-2 self-end sm:self-auto">
           <span className="text-xs text-slate-500 font-medium mr-1">
             {filteredMatches.length} {filteredMatches.length === 1 ? "partido" : "partidos"}
           </span>
@@ -331,8 +332,8 @@ export function MatchesView({
       </div>
 
       {/* Tabla de Partidos con Shadcn */}
-      <div className="flex-1 overflow-y-auto">
-        <Table>
+      <div className="min-w-0 flex-1 overflow-y-auto">
+        <Table data-mobile-cards>
           <TableHeader>
             <TableRow>
               <TableHead>Competición</TableHead>
@@ -354,7 +355,7 @@ export function MatchesView({
               filteredMatches.map((match) => (
                 <TableRow key={match.id} className="hover:bg-slate-50/70">
                   {/* Competición */}
-                  <TableCell>
+                  <TableCell data-label="Competición">
                     <div className="flex items-center gap-2">
 
                       <span className="font-semibold text-xs text-slate-900">{match.competition}</span>
@@ -362,7 +363,7 @@ export function MatchesView({
                   </TableCell>
 
                   {/* Equipos */}
-                  <TableCell>
+                  <TableCell data-label="Equipos">
                     <div className="flex items-center gap-3">
                       {/* Local */}
                       <div className="flex items-center gap-1.5 min-w-[120px]">
@@ -399,7 +400,7 @@ export function MatchesView({
                   </TableCell>
 
                   {/* Marcador */}
-                  <TableCell className="text-center">
+                  <TableCell className="text-center" data-label="Marcador">
                     {match.homeScore !== null && match.awayScore !== null ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-[#f4f5f7] border border-slate-200 text-slate-900">
                         {match.homeScore} - {match.awayScore}
@@ -410,7 +411,7 @@ export function MatchesView({
                   </TableCell>
 
                   {/* Fecha */}
-                  <TableCell>
+                  <TableCell data-label="Fecha y hora">
                     <div className="flex items-center gap-1.5 text-xs text-slate-600">
                       <Clock className="size-3 text-slate-400" />
                       <span>{formatMatchDateTime(match.kickoffAt)}</span>
@@ -418,7 +419,7 @@ export function MatchesView({
                   </TableCell>
 
                   {/* Estado */}
-                  <TableCell>
+                  <TableCell data-label="Estado">
                     {match.status === "live" ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
                         <Radio className="size-3 animate-pulse text-red-600" />
@@ -440,7 +441,7 @@ export function MatchesView({
                   </TableCell>
 
                   {/* Acciones */}
-                  <TableCell className="text-right">
+                  <TableCell className="text-right" data-label="Acciones">
                     <div className="flex items-center justify-end gap-1.5">
                       <Button
                         variant="ghost"
@@ -472,11 +473,7 @@ export function MatchesView({
 
       {/* Modal: analizar antes de importar */}
       {isImportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
-            onClick={() => !isImporting && setIsImportOpen(false)}
-          />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-3xl" onClose={() => !isImporting && setIsImportOpen(false)}>
           <div className="relative flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
             <div className="flex items-start justify-between border-b border-slate-100 bg-slate-50/60 px-6 py-4">
               <div>
@@ -617,13 +614,12 @@ export function MatchesView({
               </Button>
             </div>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Crear Partido */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setIsCreateOpen(false)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-lg" onClose={() => setIsCreateOpen(false)}>
           <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -759,13 +755,12 @@ export function MatchesView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Editar Partido */}
       {editingMatch && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setEditingMatch(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-lg" onClose={() => setEditingMatch(null)}>
           <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
               <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
@@ -901,13 +896,12 @@ export function MatchesView({
               </div>
             </form>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
 
       {/* Modal Confirmar Eliminación */}
       {matchToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setMatchToDelete(null)} />
+        <AdminLegacyDialog title="Administración" className="sm:max-w-sm" onClose={() => setMatchToDelete(null)}>
           <div className="relative w-full max-w-sm rounded-2xl bg-white shadow-2xl border border-slate-200 p-6 space-y-4">
             <h4 className="font-semibold text-slate-900 text-sm">¿Eliminar este partido?</h4>
             <p className="text-xs text-slate-600">
@@ -936,7 +930,7 @@ export function MatchesView({
               </Button>
             </div>
           </div>
-        </div>
+        </AdminLegacyDialog>
       )}
     </div>
   );

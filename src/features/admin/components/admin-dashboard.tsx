@@ -20,6 +20,7 @@ import { RolesView } from "./roles-view";
 import { MatchesView } from "./matches-view";
 import { CommunityView } from "./community-view";
 import { AlbumsView } from "./albums-view";
+import { AdminMobileNavigation } from "./admin-navigation";
 import type {
   AdminSession,
   AdminUser,
@@ -143,9 +144,9 @@ export function AdminDashboard({
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white text-slate-800 font-sans antialiased text-[13px]">
+    <div data-admin-ui className="flex h-dvh w-full overflow-hidden bg-white text-slate-800 font-sans antialiased text-[13px]">
       {/* 1. Barra lateral de navegación (Sidebar claro) */}
-      <aside className="flex flex-col w-[240px] bg-[#f8f9fa] border-r border-[#e8eaee] shrink-0 select-none overflow-y-auto">
+      <aside className="hidden md:flex flex-col w-[240px] bg-[#f8f9fa] border-r border-[#e8eaee] shrink-0 select-none overflow-y-auto">
         {/* Cabecera Sidebar con workspace */}
         <div className="flex items-center justify-between px-3.5 pt-3.5 pb-2">
           <div className="flex items-center gap-2 min-w-0">
@@ -268,16 +269,17 @@ export function AdminDashboard({
       {/* 2. Área Principal de Trabajo */}
       <div className="flex flex-col flex-1 min-w-0 bg-white">
         {/* Barra superior de cabecera */}
-        <header className="flex items-center justify-between h-12 px-6 border-b border-[#e8eaee] bg-white select-none">
+        <header className="flex shrink-0 items-center justify-between gap-2 h-14 px-3 md:h-12 md:px-6 border-b border-[#e8eaee] bg-white select-none">
+          <AdminMobileNavigation key={activeSection} activeSection={activeSection} onSelect={changeSection} onLogout={onLogout} name={fullName} role={role?.nombre || "Administrador"} counts={{ inbox: unreadCount || submissions.length, users: users.length, roles: roles.length, matches: matches.length }} />
           {/* Breadcrumb del tab activo */}
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-400">Workspace</span>
-            <ChevronRight className="size-3 text-slate-300" />
-            <span className="font-semibold text-slate-800">{sectionTitles[activeSection]}</span>
+          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm md:text-xs">
+            <span className="hidden text-slate-400 md:inline">Workspace</span>
+            <ChevronRight className="hidden size-3 text-slate-300 md:block" />
+            <span className="truncate font-semibold text-slate-800">{sectionTitles[activeSection]}</span>
           </div>
 
           {/* Lado derecho: Perfil y Menú */}
-          <div className="flex items-center gap-3 text-slate-500">
+          <div className="hidden md:flex items-center gap-3 text-slate-500">
             <div className="relative">
               <button
                 type="button"
@@ -335,7 +337,7 @@ export function AdminDashboard({
         {activeSection === "inbox" && (
           <div className="flex flex-col flex-1 min-h-0">
             {/* Sub-cabecera con pestañas de Bandeja */}
-            <div className="flex items-center px-6 border-b border-[#e8eaee] select-none bg-white">
+            <div className="flex shrink-0 items-center overflow-x-auto px-2 md:px-6 border-b border-[#e8eaee] select-none bg-white">
               {[
                 { id: "principal", label: "Principal", icon: Inbox },
                 { id: "otras", label: "Otras", icon: null },
@@ -345,7 +347,7 @@ export function AdminDashboard({
                 <button
                   key={tab.id}
                   onClick={() => setInboxTab(tab.id as typeof inboxTab)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors cursor-pointer ${inboxTab === tab.id
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors cursor-pointer ${inboxTab === tab.id
                       ? "border-slate-900 text-slate-900"
                       : "border-transparent text-slate-500 hover:text-slate-800"
                     }`}

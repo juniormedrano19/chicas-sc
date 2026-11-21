@@ -19,7 +19,7 @@ export function AlbumsView() {
   const deletion = useAdminAction();
   const [editor, setEditor] = useState<Album | null | undefined>();
   const [deleteTarget, setDeleteTarget] = useState<Album | null>(null);
-  return <div className="flex-1 overflow-y-auto p-6">
+  return <div className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div><h2 className="text-lg font-semibold">Álbumes</h2><p className="mt-1 text-sm text-muted-foreground">Organiza las fotos y los recuerdos de la comunidad.</p></div>
       <Button disabled={resource.loading} onClick={() => setEditor(null)}><Plus />Crear álbum</Button>
