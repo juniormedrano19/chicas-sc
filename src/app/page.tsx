@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { AlbumsSection } from "@/features/albums/albums-section";
-import { getStoredAlbums } from "@/features/albums/repository";
+import { getPublicAlbums, getPublicCommunity, getPublicMatches } from "@/lib/public-content";
+import { JsonLd } from "@/components/seo/json-ld";
+import { absoluteUrl, site } from "@/lib/seo";
 import {
   Header,
   Hero,
@@ -21,14 +23,23 @@ import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const albums = await getStoredAlbums().catch((error) => {
-    console.error("No se pudieron cargar los álbumes:", error);
-    return [];
-  });
+  const [albums, community, matches] = await Promise.all([
+    getPublicAlbums().catch((error) => { console.error("No se pudieron cargar los álbumes:", error); return []; }),
+    getPublicCommunity().catch((error) => { console.error("No se pudo cargar la comunidad:", error); return { members: [], testimonials: [] }; }),
+    getPublicMatches(),
+  ]);
   const contactEnabled = process.env.CONTACT_ENABLED !== "false";
 
   return (
     <>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@graph": [
+          { "@type": "Organization", "@id": absoluteUrl("/#organization"), name: site.name, url: site.url, description: "Comunidad independiente de mujeres hinchas de Sporting Cristal.", logo: cloudinaryAsset("/images/chicas-sc-logo-transparent.png"), sameAs: site.socials },
+          { "@type": "WebSite", "@id": absoluteUrl("/#website"), url: site.url, name: site.name, inLanguage: site.language, publisher: { "@id": absoluteUrl("/#organization") } },
+          { "@type": "WebPage", "@id": absoluteUrl("/#webpage"), url: site.url, name: site.title, description: site.description, inLanguage: site.language, isPartOf: { "@id": absoluteUrl("/#website") } },
+        ],
+      }} />
       <Link
         href="#contenido"
         className="sr-only fixed z-50 bg-white p-4 focus:not-sr-only"
@@ -37,12 +48,13 @@ export default async function Home() {
       </Link>
       <Header />
       <main id="contenido">
+        <h1 className="sr-only">Chicas SC: comunidad de mujeres hinchas de Sporting Cristal</h1>
         <Hero />
         <ChicasSCBanner />
         <AboutSection />
-        <MatchesSection />
-        <MembersSection />
-        <TestimonialsSection />
+        <MatchesSection result={matches} />
+        <MembersSection members={community.members} />
+        <TestimonialsSection testimonials={community.testimonials} />
         <AlbumsSection albums={albums} />
         <SocialSection />
         <FAQSection />

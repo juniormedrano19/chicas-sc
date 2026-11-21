@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bai_Jamjuree } from "next/font/google";
 import { Toaster } from "sonner";
 import { PageLoader } from "@/components/page-loader";
+import { isIndexable, pageMetadata, site } from "@/lib/seo";
 import "./globals.css";
 
 const baiJamjuree = Bai_Jamjuree({
@@ -13,16 +14,23 @@ const baiJamjuree = Bai_Jamjuree({
 });
 
 export const metadata: Metadata = {
-  title: "Chicas SC | Una pasión que nos une",
-  description:
-    "Una comunidad de chicas, una misma pasión celeste. Conoce a Chicas SC, nuestros encuentros y los recuerdos que compartimos.",
+  ...pageMetadata({ title: site.title, description: site.description, path: "/" }),
+  metadataBase: new URL(site.url),
+  applicationName: site.name,
+  title: { default: site.title, template: "%s | Chicas SC" },
+  category: "sports",
+  robots: { index: isIndexable, follow: isIndexable, googleBot: { index: isIndexable, follow: isIndexable, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={baiJamjuree.variable}>
+    <html lang={site.language} className={baiJamjuree.variable}>
       <body className="font-sans antialiased">
         <PageLoader />
         {children}

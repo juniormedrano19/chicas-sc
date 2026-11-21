@@ -13,6 +13,7 @@ export type Album = {
   cover: string;
   photos: AlbumPhoto[];
   isExample: boolean;
+  updatedAt?: string;
 };
 
 const history: AlbumPhoto = {

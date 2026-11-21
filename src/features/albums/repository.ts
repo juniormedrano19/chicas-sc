@@ -1,8 +1,9 @@
-import { collection, doc, getDoc, getDocs, runTransaction } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, runTransaction, serverTimestamp, Timestamp } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
 import type { Album, AlbumPhoto } from "./content";
 
 export async function getStoredAlbum(slug: string): Promise<Album | null> {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null;
   const snapshot = await getDoc(doc(firestore, "albums", slug));
   if (!snapshot.exists()) return null;
   const photos = await getDocs(collection(firestore, "albums", slug, "photos"));
@@ -10,6 +11,7 @@ export async function getStoredAlbum(slug: string): Promise<Album | null> {
   return {
     slug: snapshot.id, title: data.title, description: data.description,
     cover: data.cover, isExample: false,
+    ...(data.updatedAt instanceof Timestamp ? { updatedAt: data.updatedAt.toDate().toISOString() } : {}),
     photos: photos.docs.sort((a, b) => a.data().order - b.data().order)
       .map((photo) => photo.data() as AlbumPhoto),
   };
@@ -36,6 +38,7 @@ export async function saveStoredAlbum(previousSlug: string | null, album: Album)
     transaction.set(target, {
       title: album.title.trim(), description: album.description.trim(),
       cover: album.photos[0].src, slug: album.slug,
+      updatedAt: serverTimestamp(),
     });
     album.photos.forEach((photo, order) => transaction.set(doc(firestore, "albums", album.slug, "photos", String(order)), { ...photo, order }));
   });

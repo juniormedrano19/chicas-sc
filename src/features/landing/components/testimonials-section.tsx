@@ -3,12 +3,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
-import { useCommunityContent } from "../hooks/use-community-content";
+import type { Testimonial } from "../content";
 import { useTestimonialsCarousel } from "../hooks/use-testimonials-carousel";
 import { TestimonialCard } from "./testimonial-card";
 
-export function TestimonialsSection() {
-  const { testimonials } = useCommunityContent();
+export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
   const { currentIndex, trackRef, moveTo } = useTestimonialsCarousel(testimonials.length);
 
   return (

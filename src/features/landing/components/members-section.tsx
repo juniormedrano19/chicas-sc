@@ -5,14 +5,13 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
-import { useCommunityContent } from "../hooks/use-community-content";
+import type { Member } from "../content";
 import { useMembersExpand } from "../hooks/use-members-expand";
 import { MemberCard } from "./member-card";
 import { MemberPhotoViewer } from "./member-photo-viewer";
 
-export function MembersSection() {
+export function MembersSection({ members }: { members: Member[] }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const { members } = useCommunityContent();
   const { expanded, toggleExpand } = useMembersExpand();
   const visibleMembers = expanded ? members : members.slice(0, 4);
 

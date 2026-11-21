@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useMatchesCarousel } from "./hooks/use-matches-carousel";
 import { MatchCard } from "./components/match-card";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
+import type { MatchResult } from "./repository";
 
-export function MatchesSection() {
+export function MatchesSection({ result }: { result: MatchResult }) {
   const {
     matches,
     state,
@@ -17,7 +18,7 @@ export function MatchesSection() {
     canScrollRight,
     scroll,
     updateScrollState,
-  } = useMatchesCarousel();
+  } = useMatchesCarousel(result);
 
   return (
     <section

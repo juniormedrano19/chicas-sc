@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { matchRepository, type MatchResult } from "../repository";
+import type { MatchResult } from "../repository";
 import type { Match } from "../schema";
-
-const initialResult: MatchResult = { matches: [], state: "loading" };
 
 function findLastFinishedIndex(matches: Match[]) {
   return matches.reduce(
@@ -13,25 +11,10 @@ function findLastFinishedIndex(matches: Match[]) {
   );
 }
 
-export function useMatchesCarousel() {
-  const [{ matches, state }, setResult] = useState<MatchResult>(initialResult);
+export function useMatchesCarousel({ matches, state }: MatchResult) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-
-  useEffect(() => {
-    let isCurrent = true;
-
-    void matchRepository.latest().then((result) => {
-      if (isCurrent) {
-        setResult(result);
-      }
-    });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, []);
 
   const updateScrollState = useCallback(() => {
     if (!carouselRef.current) return;

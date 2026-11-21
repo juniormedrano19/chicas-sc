@@ -20,7 +20,7 @@ export function LoadingBrand({ className = "size-24 bg-primary sm:size-32" }: { 
 
 export function LoadingIndicator() {
   return (
-    <main className="grid min-h-[100svh] place-items-center bg-muted px-4">
+    <div className="grid min-h-[100svh] place-items-center bg-muted px-4">
       <div className="flex flex-col items-center gap-6">
         <LoadingBrand />
         <div className="inline-flex text-primary" role="status" aria-label="Cargando">
@@ -49,6 +49,6 @@ export function LoadingIndicator() {
           <span className="sr-only">Cargando…</span>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

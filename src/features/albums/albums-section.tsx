@@ -10,10 +10,10 @@ import { useAlbumsExpand } from "./hooks/use-albums-expand";
 
 const INITIAL_COUNT = 3;
 
-export function AlbumsSection({ albums }: { albums: Album[] }) {
+export function AlbumsSection({ albums, initialCount = INITIAL_COUNT }: { albums: Album[]; initialCount?: number }) {
   const { expanded, visibleAlbums, toggleExpand, hasMore } = useAlbumsExpand(
     albums,
-    INITIAL_COUNT,
+    initialCount,
   );
 
   return (
@@ -87,6 +87,7 @@ export function AlbumsSection({ albums }: { albums: Album[] }) {
               </Button>
             </div>
           )}
+          <div className="mt-6 text-center"><Link href="/albumes" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">Explorar todos los álbumes<ArrowRight className="size-4" /></Link></div>
         </ScrollReveal>
       </div>
     </section>
