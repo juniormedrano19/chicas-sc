@@ -6,6 +6,7 @@ import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { useMatchesCarousel } from "./hooks/use-matches-carousel";
 import { MatchCard } from "./components/match-card";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 export function MatchesSection() {
   const {
@@ -21,7 +22,8 @@ export function MatchesSection() {
   return (
     <section
       id="partidos"
-      className="bg-[url('/images/terrace.jpg')] bg-cover bg-center py-16"
+      className="bg-cover bg-center py-16"
+      style={{ backgroundImage: `url(${cloudinaryAsset("/images/terrace.jpg")})` }}
     >
       <div className="wrap">
         <ScrollReveal>

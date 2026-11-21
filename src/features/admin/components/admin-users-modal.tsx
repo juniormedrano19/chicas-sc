@@ -19,6 +19,10 @@ import { Label } from "@/components/ui/label";
 import { UserAvatar } from "./user-avatar";
 import type { AdminUser, Role } from "../types";
 
+function createAccessCode() {
+  return String(Math.floor(100_000 + Math.random() * 900_000));
+}
+
 interface AdminUsersModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,7 +50,7 @@ export function AdminUsersModal({
   const [nombres, setNombres] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [usuario, setUsuario] = useState("");
-  const [codigo, setCodigo] = useState(`CSC-${Math.floor(1000 + Math.random() * 9000)}`);
+  const [codigo, setCodigo] = useState("");
   const [idRol, setIdRol] = useState(roles[0]?.id || "role-coordinator");
   const [urlAvatar, setUrlAvatar] = useState("");
 
@@ -70,7 +74,7 @@ export function AdminUsersModal({
       setNombres("");
       setApellidos("");
       setUsuario("");
-      setCodigo(`CSC-${Math.floor(1000 + Math.random() * 9000)}`);
+      setCodigo("");
       setActiveTab("list");
     } finally {
       setIsSubmitting(false);
@@ -131,7 +135,10 @@ export function AdminUsersModal({
               Lista de Usuarios ({users.length})
             </button>
             <button
-              onClick={() => setActiveTab("create")}
+              onClick={() => {
+                setActiveTab("create");
+                if (!codigo) setCodigo(createAccessCode());
+              }}
               className={`pb-2.5 text-sm font-medium border-b-2 transition-colors px-1 flex items-center gap-1.5 ${activeTab === "create"
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"

@@ -6,17 +6,17 @@ import {
   Users,
   Shield,
   Trophy,
-  Plus,
   LogOut,
   ShieldCheck,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { UserAvatar } from "./user-avatar";
 import { InboxSubmissions } from "./inbox-submissions";
 import { UsersView } from "./users-view";
 import { RolesView } from "./roles-view";
 import { MatchesView } from "./matches-view";
+import { CommunityView } from "./community-view";
+import { AlbumsView } from "./albums-view";
 import type {
   AdminSession,
   AdminUser,
@@ -26,6 +26,8 @@ import type {
   AdminTeam,
   AdminLeague,
   MatchStatus,
+  SofascoreImportPreview,
+  SofascoreImportResult,
 } from "../types";
 import type { AdminSection } from "../store/use-admin-store";
 
@@ -40,7 +42,6 @@ interface AdminDashboardProps {
   teams?: AdminTeam[];
   leagues?: AdminLeague[];
   loadingSubmissions?: boolean;
-  loadingMatches?: boolean;
   onLogout: () => void;
   // Users
   onToggleBlock: (userId: string, isBlocked: boolean) => Promise<void>;
@@ -74,13 +75,14 @@ interface AdminDashboardProps {
     }>,
   ) => Promise<void>;
   onDeleteMatch?: (matchId: string) => Promise<void>;
+  onPreviewSofascoreJson?: (payload: unknown) => Promise<SofascoreImportPreview>;
+  onImportSofascoreJson?: (payload: unknown) => Promise<SofascoreImportResult>;
   // Submissions
   onMarkAsRead?: (id: string) => Promise<void> | void;
   onDeleteSubmission?: (id: string) => Promise<void> | void;
   // Refreshes
   onRefresh: () => Promise<void>;
   onRefreshSubmissions?: () => Promise<void>;
-  onRefreshMatches?: () => Promise<void>;
 }
 
 export function AdminDashboard({
@@ -94,7 +96,6 @@ export function AdminDashboard({
   teams = [],
   leagues = [],
   loadingSubmissions = false,
-  loadingMatches = false,
   onLogout,
   onToggleBlock,
   onCreateUser,
@@ -106,11 +107,12 @@ export function AdminDashboard({
   onCreateMatch = async () => { },
   onUpdateMatch = async () => { },
   onDeleteMatch = async () => { },
+  onPreviewSofascoreJson = async () => ({ items: [], created: 0, updated: 0, skipped: 0 }),
+  onImportSofascoreJson = async () => ({ created: 0, updated: 0, skipped: 0 }),
   onMarkAsRead,
   onDeleteSubmission = async () => { },
   onRefresh,
   onRefreshSubmissions,
-  onRefreshMatches = async () => { },
 }: AdminDashboardProps) {
   const [localSection, setLocalSection] = useState<AdminSection>(initialSection);
   const [inboxTab, setInboxTab] = useState<"principal" | "otras" | "mas_tarde" | "borradas">("principal");
@@ -132,6 +134,9 @@ export function AdminDashboard({
     users: "Gestión de Usuarios",
     roles: "Gestión de Roles",
     matches: "Gestión de Partidos",
+    members: "Gestión de Integrantes",
+    testimonials: "Gestión de Testimonios",
+    albums: "Gestión de Álbumes",
   };
 
   return (
@@ -152,6 +157,13 @@ export function AdminDashboard({
 
         {/* 4 Secciones de navegación principales */}
         <div className="px-2 py-2 space-y-1">
+          <button type="button" onClick={() => changeSection("albums")} className={`w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium ${activeSection === "albums" ? "bg-[#e7ebf0] text-slate-900" : "text-slate-600 hover:bg-[#eaeef3]"}`}>Álbumes</button>
+          {(["members", "testimonials"] as const).map((section) => (
+            <button key={section} type="button" onClick={() => changeSection(section)}
+              className={`w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium ${activeSection === section ? "bg-[#e7ebf0] text-slate-900" : "text-slate-600 hover:bg-[#eaeef3]"}`}>
+              {section === "members" ? "Integrantes" : "Testimonios"}
+            </button>
+          ))}
           {/* 1. Bandeja de entrada */}
           <button
             type="button"
@@ -370,6 +382,10 @@ export function AdminDashboard({
           />
         )}
 
+        {(activeSection === "members" || activeSection === "testimonials") && (
+          <CommunityView key={activeSection} section={activeSection} />
+        )}
+        {activeSection === "albums" && <AlbumsView />}
         {activeSection === "matches" && (
           <MatchesView
             matches={matches}
@@ -378,7 +394,8 @@ export function AdminDashboard({
             onCreateMatch={onCreateMatch}
             onUpdateMatch={onUpdateMatch}
             onDeleteMatch={onDeleteMatch}
-            onRefresh={onRefreshMatches}
+            onPreviewSofascoreJson={onPreviewSofascoreJson}
+            onImportSofascoreJson={onImportSofascoreJson}
           />
         )}
       </div>

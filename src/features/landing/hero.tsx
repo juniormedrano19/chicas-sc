@@ -3,23 +3,24 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ParallaxLayer } from "@/components/motion/scroll-reveal";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import { useHeroSlider } from "./hooks/use-hero-slider";
 
 const mobileHeroSlides = [
   {
-    src: "/images/hero/hero1.png",
+    src: cloudinaryAsset("/images/hero/hero1.png"),
     alt: "Integrantes de Chicas SC compartiendo su pasión por Sporting Cristal",
   },
   {
-    src: "/images/hero/hero2.png",
+    src: cloudinaryAsset("/images/hero/hero2.png"),
     alt: "Integrantes de Chicas SC compartiendo su pasión por Sporting Cristal",
   },
   {
-    src: "/images/hero/hero4.jpg",
+    src: cloudinaryAsset("/images/hero/hero4.jpg"),
     alt: "Integrantes de Chicas SC compartiendo su pasión por Sporting Cristal",
   },
   {
-    src: "/images/hero/hero5.png",
+    src: cloudinaryAsset("/images/hero/hero5.png"),
     alt: "Integrante de Chicas SC con la camiseta celeste",
   },
 ] as const;
@@ -106,7 +107,7 @@ export function Hero() {
         <div className="flex min-h-[100svh] w-full flex-1">
           <div className="relative flex min-h-[100svh] w-full overflow-hidden bg-white">
             <ParallaxLayer
-              imageUrl="/images/chicas-sc-hero-stadium.png"
+              imageUrl={cloudinaryAsset("/images/chicas-sc-hero-stadium.png")}
               className="absolute -inset-y-[6%] inset-x-0 bg-cover bg-[position:58%_center] sm:bg-center"
             />
             <p
@@ -117,7 +118,10 @@ export function Hero() {
             </p>
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-[url('/images/chicas-sc-hero-foreground-transparent-v3.png')] bg-cover bg-[position:58%_center] brightness-110 contrast-105 drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)] sm:bg-center"
+              className="pointer-events-none absolute inset-0 bg-cover bg-[position:58%_center] brightness-110 contrast-105 drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)] sm:bg-center"
+              style={{
+                backgroundImage: `url(${cloudinaryAsset("/images/chicas-sc-hero-foreground-transparent-v3.png")})`,
+              }}
             />
             <div
               aria-hidden="true"

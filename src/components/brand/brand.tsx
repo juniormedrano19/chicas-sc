@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 export function Brand() {
   return (
     <Link href="/#inicio" aria-label="Chicas SC, inicio" className="inline-flex shrink-0 rounded-lg focus-visible:outline-current">
       <Image
-        src="/images/chicas-sc-logo-transparent.png"
+        src={cloudinaryAsset("/images/chicas-sc-logo-transparent.png")}
         alt="Logo de Chicas SC"
         width={1080}
         height={1080}

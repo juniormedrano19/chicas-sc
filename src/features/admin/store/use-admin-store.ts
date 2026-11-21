@@ -13,9 +13,11 @@ import type {
   AdminTeam,
   AdminLeague,
   MatchStatus,
+  SofascoreImportPreview,
+  SofascoreImportResult,
 } from "../types";
 
-export type AdminSection = "inbox" | "users" | "roles" | "matches";
+export type AdminSection = "inbox" | "users" | "roles" | "matches" | "members" | "testimonials" | "albums";
 
 interface AdminState {
   session: AdminSession | null;
@@ -74,6 +76,8 @@ interface AdminState {
     }>,
   ) => Promise<void>;
   deleteMatch: (matchId: string) => Promise<void>;
+  previewMatchesFromSofascoreJson: (payload: unknown) => Promise<SofascoreImportPreview>;
+  importMatchesFromSofascoreJson: (payload: unknown) => Promise<SofascoreImportResult>;
 
   // Submissions
   markSubmissionAsRead: (id: string) => Promise<void>;
@@ -374,6 +378,24 @@ export const useAdminStore = create<AdminState>()(
           toast.success("Partido eliminado con éxito.");
         } catch {
           toast.error("Error al eliminar partido.");
+        }
+      },
+
+      previewMatchesFromSofascoreJson: (payload) =>
+        adminRepository.previewSofascoreMatches(payload),
+
+      importMatchesFromSofascoreJson: async (payload) => {
+        try {
+          const result = await adminRepository.importSofascoreMatches(payload);
+          await get().loadMatches();
+          toast.success("Partidos importados desde SofaScore", {
+            description: `${result.created} nuevos · ${result.updated} actualizados.`,
+          });
+          return result;
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "No se pudo importar el archivo.";
+          toast.error("No se pudieron importar los partidos", { description: message });
+          throw err;
         }
       },
     }),

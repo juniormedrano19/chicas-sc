@@ -62,3 +62,25 @@ export interface AdminMatch {
   awayScore: number | null;
   status: MatchStatus;
 }
+
+export interface SofascoreImportResult {
+  created: number;
+  updated: number;
+  skipped: number;
+}
+
+export interface SofascoreImportPreviewItem {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  competition: string;
+  kickoffAt: Date;
+  action: "create" | "update";
+}
+
+export interface SofascoreImportPreview {
+  items: SofascoreImportPreviewItem[];
+  created: number;
+  updated: number;
+  skipped: number;
+}

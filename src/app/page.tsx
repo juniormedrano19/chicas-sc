@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AlbumsSection } from "@/features/albums/albums-section";
-import { albums } from "@/features/albums/content";
+import { getStoredAlbums } from "@/features/albums/repository";
 import {
   Header,
   Hero,
@@ -16,10 +16,15 @@ import {
 import { MatchesSection } from "@/features/matches/matches-section";
 import { ContactForm } from "@/features/contact/contact-form";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+  const albums = await getStoredAlbums().catch((error) => {
+    console.error("No se pudieron cargar los álbumes:", error);
+    return [];
+  });
   const contactEnabled = process.env.CONTACT_ENABLED !== "false";
 
   return (
@@ -52,7 +57,10 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <div className="aspect-[21/5] w-full bg-muted bg-[url('/images/history.jpg')] bg-contain bg-center bg-no-repeat sm:h-[400px] sm:aspect-auto sm:bg-cover" />
+      <div
+        className="aspect-[21/5] w-full bg-muted bg-contain bg-center bg-no-repeat sm:h-[400px] sm:aspect-auto sm:bg-cover"
+        style={{ backgroundImage: `url(${cloudinaryAsset("/images/history.jpg")})` }}
+      />
       <Footer />
     </>
   );

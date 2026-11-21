@@ -37,6 +37,12 @@ export function useAdminAuth() {
   const createMatch = useAdminStore((s) => s.createMatch);
   const updateMatch = useAdminStore((s) => s.updateMatch);
   const deleteMatch = useAdminStore((s) => s.deleteMatch);
+  const previewMatchesFromSofascoreJson = useAdminStore(
+    (s) => s.previewMatchesFromSofascoreJson,
+  );
+  const importMatchesFromSofascoreJson = useAdminStore(
+    (s) => s.importMatchesFromSofascoreJson,
+  );
 
   const markSubmissionAsRead = useAdminStore((s) => s.markSubmissionAsRead);
   const deleteSubmission = useAdminStore((s) => s.deleteSubmission);
@@ -75,6 +81,8 @@ export function useAdminAuth() {
     createMatch,
     updateMatch,
     deleteMatch,
+    previewMatchesFromSofascoreJson,
+    importMatchesFromSofascoreJson,
     markSubmissionAsRead,
     deleteSubmission,
     reloadUsers: loadData,

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 const DESKTOP_QUERY = "(min-width: 768px)";
 
@@ -20,7 +21,7 @@ const ABOUT_ITEMS: AboutFocusPanelItem[] = [
     id: "pasion",
     label: "Pasión celeste",
     description: "Alentamos con el corazón en cada encuentro.",
-    image: "/images/somos/foto1.jpeg",
+    image: cloudinaryAsset("/images/somos/foto1.jpeg"),
 
     accent: "#002E79",
   },
@@ -28,7 +29,7 @@ const ABOUT_ITEMS: AboutFocusPanelItem[] = [
     id: "amistad",
     label: "Amistad",
     description: "La tribuna nos juntó y la amistad nos hizo familia.",
-    image: "/images/somos/foto2.jpeg",
+    image: cloudinaryAsset("/images/somos/foto2.jpeg"),
 
     accent: "#6ac5fd",
   },
@@ -36,7 +37,7 @@ const ABOUT_ITEMS: AboutFocusPanelItem[] = [
     id: "comunidad",
     label: "Comunidad",
     description: "Siempre hay un lugar para una chica celeste más.",
-    image: "/images/somos/foto3.jpeg",
+    image: cloudinaryAsset("/images/somos/foto3.jpeg"),
 
     accent: "#002E79",
   },
@@ -44,7 +45,7 @@ const ABOUT_ITEMS: AboutFocusPanelItem[] = [
     id: "recuerdos",
     label: "Recuerdos",
     description: "Cada partido deja una historia que queremos guardar.",
-    image: "/images/somos/foto5.jpeg",
+    image: cloudinaryAsset("/images/somos/foto5.jpeg"),
 
     accent: "#FEDB01",
   },

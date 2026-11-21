@@ -2,9 +2,9 @@ import Script from "next/script";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 
 const TIKTOK_VIDEO_IDS = [
-  "7682299821155388693",
+  "7708047194443779349",
   "7679909809755327765",
-  "7676574849879248149",
+  "7696867816200277269",
 ] as const;
 
 export function SocialSection() {

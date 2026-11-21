@@ -16,14 +16,14 @@ export type Album = {
 };
 
 const history: AlbumPhoto = {
-  src: "/images/history.jpg",
+  src: cloudinaryAsset("/images/history.jpg"),
   width: 1600,
   height: 380,
   alt: "Referentes de la historia de Sporting Cristal",
   caption: "Imagen de referencia del Club Sporting Cristal, no del grupo.",
 };
 const terrace: AlbumPhoto = {
-  src: "/images/terrace.jpg",
+  src: cloudinaryAsset("/images/terrace.jpg"),
   width: 1920,
   height: 2000,
   alt: "Imagen de referencia de la tribuna celeste",
@@ -31,11 +31,11 @@ const terrace: AlbumPhoto = {
 };
 
 const previasPhotos: AlbumPhoto[] = [
-  { src: "/images/somos/foto1.jpeg", width: 1440, height: 1798, alt: "Chicas SC reunidas antes de un partido", caption: "La previa empieza cuando nos volvemos a encontrar." },
-  { src: "/images/somos/foto2.jpeg", width: 1440, height: 1626, alt: "Integrantes de Chicas SC en una previa", caption: "Celeste, amigas y una misma pasión." },
-  { src: "/images/somos/foto3.jpeg", width: 1440, height: 1440, alt: "Recuerdo de Chicas SC", caption: "Un momento para guardar." },
-  { src: "/images/somos/foto4.jpeg", width: 1440, height: 1920, alt: "Encuentro de Chicas SC antes del partido", caption: "Donde la emoción se hace familia." },
-  { src: "/images/somos/foto5.jpeg", width: 1440, height: 1920, alt: "Chicas SC compartiendo una previa", caption: "Siempre listas para alentar." },
+  { src: cloudinaryAsset("/images/somos/foto1.jpeg"), width: 1440, height: 1798, alt: "Chicas SC reunidas antes de un partido", caption: "La previa empieza cuando nos volvemos a encontrar." },
+  { src: cloudinaryAsset("/images/somos/foto2.jpeg"), width: 1440, height: 1626, alt: "Integrantes de Chicas SC en una previa", caption: "Celeste, amigas y una misma pasión." },
+  { src: cloudinaryAsset("/images/somos/foto3.jpeg"), width: 1440, height: 1440, alt: "Recuerdo de Chicas SC", caption: "Un momento para guardar." },
+  { src: cloudinaryAsset("/images/somos/foto4.jpeg"), width: 1440, height: 1920, alt: "Encuentro de Chicas SC antes del partido", caption: "Donde la emoción se hace familia." },
+  { src: cloudinaryAsset("/images/somos/foto5.jpeg"), width: 1440, height: 1920, alt: "Chicas SC compartiendo una previa", caption: "Siempre listas para alentar." },
 ];
 
 // Replace these examples with authorized group albums and photographs.
@@ -51,3 +51,5 @@ export const albums: Album[] = [
 export function getAlbum(slug: string): Album | undefined {
   return albums.find((album) => album.slug === slug);
 }
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
+

@@ -1,6 +1,6 @@
 import {
   collection,
-  getDocs,
+  getDocsFromServer,
   Timestamp,
   type DocumentData,
   type QuerySnapshot,
@@ -60,9 +60,9 @@ export const matchRepository: MatchRepository = {
   async latest() {
     try {
       const [teamSnapshots, leagueSnapshots, matchSnapshots] = await Promise.all([
-        getDocs(collection(firestore, "teams")),
-        getDocs(collection(firestore, "leagues")),
-        getDocs(collection(firestore, "matches")),
+        getDocsFromServer(collection(firestore, "teams")),
+        getDocsFromServer(collection(firestore, "leagues")),
+        getDocsFromServer(collection(firestore, "matches")),
       ]);
 
       const teams = toEntityMap(teamSnapshots);

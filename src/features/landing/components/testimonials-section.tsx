@@ -3,11 +3,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
-import { testimonials } from "../content";
+import { useCommunityContent } from "../hooks/use-community-content";
 import { useTestimonialsCarousel } from "../hooks/use-testimonials-carousel";
 import { TestimonialCard } from "./testimonial-card";
 
 export function TestimonialsSection() {
+  const { testimonials } = useCommunityContent();
   const { currentIndex, trackRef, moveTo } = useTestimonialsCarousel(testimonials.length);
 
   return (
@@ -17,7 +18,7 @@ export function TestimonialsSection() {
           <div className="mb-10">
             <div className="flex w-full flex-col text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
               <div>
-                <p className="eyebrow mb-4">Voces de nuestra comunidad</p>
+                <p className="eyebrow mb-4">Nuestra pasión</p>
                 <h2 className="section-title">Se siente. Se comparte.</h2>
               </div>
 

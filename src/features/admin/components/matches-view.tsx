@@ -1,16 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import {
   Search,
   CalendarPlus,
   Edit2,
   Trash2,
-  Trophy,
   Clock,
 
   Radio,
+  Upload,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { AdminMatch, AdminTeam, AdminLeague, MatchStatus } from "../types";
+import type {
+  AdminMatch,
+  AdminTeam,
+  AdminLeague,
+  MatchStatus,
+  SofascoreImportPreview,
+  SofascoreImportResult,
+} from "../types";
 
 interface MatchesViewProps {
   matches: AdminMatch[];
@@ -51,7 +59,8 @@ interface MatchesViewProps {
     }>,
   ) => Promise<void>;
   onDeleteMatch: (matchId: string) => Promise<void>;
-  onRefresh: () => Promise<void>;
+  onPreviewSofascoreJson: (payload: unknown) => Promise<SofascoreImportPreview>;
+  onImportSofascoreJson: (payload: unknown) => Promise<SofascoreImportResult>;
 }
 
 function formatMatchDateTime(
@@ -97,10 +106,17 @@ export function MatchesView({
   onCreateMatch,
   onUpdateMatch,
   onDeleteMatch,
-  onRefresh,
+  onPreviewSofascoreJson,
+  onImportSofascoreJson,
 }: MatchesViewProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [importText, setImportText] = useState("");
+  const [importPreview, setImportPreview] = useState<SofascoreImportPreview | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   // Modales
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -201,10 +217,62 @@ export function MatchesView({
     setMatchToDelete(null);
   };
 
-  const handleManualRefresh = async () => {
-    setIsRefreshing(true);
-    await onRefresh();
-    setIsRefreshing(false);
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    // Reset first so choosing the same file later still triggers onChange.
+    event.target.value = "";
+    if (!file) return;
+
+    try {
+      setImportText(await file.text());
+      setImportPreview(null);
+      setImportError(null);
+      setIsImportOpen(true);
+    } catch (error) {
+      console.error("No se pudo importar el JSON de SofaScore:", error);
+      setImportError("No pudimos leer el archivo seleccionado.");
+    }
+  };
+
+  const handlePreviewImport = async () => {
+    if (!importText.trim()) {
+      setImportError("Pega el JSON de SofaScore o selecciona un archivo antes de analizar.");
+      return;
+    }
+
+    setIsPreviewing(true);
+    setImportError(null);
+    try {
+      const payload: unknown = JSON.parse(importText);
+      setImportPreview(await onPreviewSofascoreJson(payload));
+    } catch (error) {
+      setImportPreview(null);
+      setImportError(
+        error instanceof SyntaxError
+          ? "El contenido pegado no es un JSON válido."
+          : error instanceof Error
+            ? error.message
+            : "No pudimos analizar este archivo.",
+      );
+    } finally {
+      setIsPreviewing(false);
+    }
+  };
+
+  const handleConfirmImport = async () => {
+    if (!importPreview) return;
+
+    setIsImporting(true);
+    try {
+      await onImportSofascoreJson(JSON.parse(importText));
+      setIsImportOpen(false);
+      setImportText("");
+      setImportPreview(null);
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : "No se pudo importar el JSON.");
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   return (
@@ -231,6 +299,26 @@ export function MatchesView({
 
 
 
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,text/plain,.json,.txt"
+            className="sr-only"
+            onChange={handleImportFile}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setImportError(null);
+              setIsImportOpen(true);
+            }}
+            className="h-8 text-xs gap-1.5 rounded-lg"
+          >
+            <Upload className="size-3.5" />
+            <span>Importar JSON</span>
+          </Button>
           <Button
             onClick={handleOpenCreate}
             size="sm"
@@ -381,6 +469,156 @@ export function MatchesView({
           </TableBody>
         </Table>
       </div>
+
+      {/* Modal: analizar antes de importar */}
+      {isImportOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            onClick={() => !isImporting && setIsImportOpen(false)}
+          />
+          <div className="relative flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="flex items-start justify-between border-b border-slate-100 bg-slate-50/60 px-6 py-4">
+              <div>
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                  <FileText className="size-4 text-primary" />
+                  Importar partidos desde SofaScore
+                </h3>
+                <p className="mt-1 text-xs text-slate-500">
+                  Pega el JSON o carga un archivo. Primero revisaremos qué se creará y qué se actualizará.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => !isImporting && setIsImportOpen(false)}
+                className="text-lg leading-none text-slate-400 hover:text-slate-700"
+                aria-label="Cerrar importación"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => importInputRef.current?.click()}
+                  disabled={isPreviewing || isImporting}
+                  className="text-xs"
+                >
+                  <Upload className="size-3.5" />
+                  Elegir archivo JSON
+                </Button>
+                <span className="text-xs text-slate-500">También puedes pegar el contenido debajo.</span>
+              </div>
+
+              <textarea
+                value={importText}
+                onChange={(event) => {
+                  setImportText(event.target.value);
+                  setImportPreview(null);
+                  setImportError(null);
+                }}
+                placeholder={'{\n  "events": [ ... ]\n}'}
+                spellCheck={false}
+                className="min-h-44 w-full resize-y rounded-lg border border-slate-200 bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100 outline-none placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary"
+                aria-label="JSON de SofaScore"
+              />
+
+              {importError && (
+                <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                  {importError}
+                </p>
+              )}
+
+              {importPreview && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">Partidos</p>
+                      <p className="text-lg font-semibold text-slate-900">{importPreview.items.length}</p>
+                    </div>
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2">
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-emerald-700">Nuevos</p>
+                      <p className="text-lg font-semibold text-emerald-800">{importPreview.created}</p>
+                    </div>
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-amber-700">Actualizar</p>
+                      <p className="text-lg font-semibold text-amber-800">{importPreview.updated}</p>
+                    </div>
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">Omitidos</p>
+                      <p className="text-lg font-semibold text-slate-900">{importPreview.skipped}</p>
+                    </div>
+                  </div>
+
+                  <div className="overflow-hidden rounded-lg border border-slate-200">
+                    <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                      <span>Partido</span>
+                      <span>Acción</span>
+                    </div>
+                    <ul className="max-h-56 divide-y divide-slate-100 overflow-y-auto">
+                      {importPreview.items.map((match) => (
+                        <li key={match.id} className="grid grid-cols-[1fr_auto] gap-3 px-3 py-2.5 text-xs">
+                          <div className="min-w-0">
+                            <p className="truncate font-medium text-slate-800">
+                              {match.homeTeam} <span className="text-slate-400">vs</span> {match.awayTeam}
+                            </p>
+                            <p className="mt-0.5 truncate text-slate-500">
+                              {match.competition} · {formatMatchDateTime(match.kickoffAt)} · ID {match.id}
+                            </p>
+                          </div>
+                          <span
+                            className={`h-fit rounded-full px-2 py-1 text-[10px] font-semibold ${
+                              match.action === "update"
+                                ? "bg-amber-100 text-amber-800"
+                                : "bg-emerald-100 text-emerald-800"
+                            }`}
+                          >
+                            {match.action === "update" ? "Actualizar" : "Crear"}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsImportOpen(false)}
+                disabled={isImporting}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handlePreviewImport}
+                disabled={isPreviewing || isImporting}
+              >
+                {isPreviewing ? "Analizando…" : "Analizar JSON"}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleConfirmImport}
+                disabled={!importPreview || isImporting || isPreviewing}
+                className="bg-slate-900 text-white hover:bg-slate-800"
+              >
+                {isImporting ? "Importando…" : "Confirmar importación"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Crear Partido */}
       {isCreateOpen && (

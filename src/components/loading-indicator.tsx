@@ -1,4 +1,5 @@
 import { cn } from "cn";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 export function LoadingBrand({ className = "size-24 bg-primary sm:size-32" }: { className?: string }) {
   return (
@@ -6,9 +7,13 @@ export function LoadingBrand({ className = "size-24 bg-primary sm:size-32" }: { 
       role="img"
       aria-label="Chicas SC"
       className={cn(
-        "bg-primary [mask-image:url('/images/chicas-sc-logo-transparent.png')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url('/images/chicas-sc-logo-transparent.png')] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]",
+        "bg-primary [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]",
         className,
       )}
+      style={{
+        maskImage: `url(${cloudinaryAsset("/images/chicas-sc-logo-transparent.png")})`,
+        WebkitMaskImage: `url(${cloudinaryAsset("/images/chicas-sc-logo-transparent.png")})`,
+      }}
     />
   );
 }

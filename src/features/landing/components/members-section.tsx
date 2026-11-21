@@ -1,15 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
-import { members } from "../content";
+import { useCommunityContent } from "../hooks/use-community-content";
 import { useMembersExpand } from "../hooks/use-members-expand";
 import { MemberCard } from "./member-card";
+import { MemberPhotoViewer } from "./member-photo-viewer";
 
 export function MembersSection() {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const { members } = useCommunityContent();
   const { expanded, toggleExpand } = useMembersExpand();
-  const visibleMembers = members.slice(0, expanded ? 6 : 4);
+  const visibleMembers = expanded ? members : members.slice(0, 4);
 
   return (
     <section id="nosotras" className="section pt-0 sm:pt-14">
@@ -37,7 +42,7 @@ export function MembersSection() {
             className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4 lg:gap-5"
           >
             {visibleMembers.map((member, index) => (
-              <MemberCard key={member.name} member={member} index={index} />
+              <MemberCard key={member.name} member={member} index={index} onView={() => setSelectedIndex(index)} />
             ))}
           </div>
 
@@ -55,6 +60,7 @@ export function MembersSection() {
           </div>
         </ScrollReveal>
       </div>
+      <MemberPhotoViewer members={members} selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
     </section>
   );
 }

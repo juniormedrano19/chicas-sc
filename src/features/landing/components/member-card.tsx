@@ -1,26 +1,27 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { MemberPhotoViewer } from "./member-photo-viewer";
 import type { Member } from "../content";
 
 export interface MemberCardProps {
   member: Member;
   index: number;
+  onView?: () => void;
 }
 
-export function MemberCard({ member, index }: MemberCardProps) {
+export function MemberCard({ member, index, onView }: MemberCardProps) {
+  const [open, setOpen] = useState(false);
   const isEven = index % 2 === 0;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <>
         <Button
+          type="button"
+          aria-label={`Ver foto de ${member.name}`}
+          onClick={() => { if (member.image) { if (onView) onView(); else setOpen(true); } }}
           variant="ghost"
           className={`group relative h-auto min-w-0 overflow-hidden rounded-none p-0 text-left whitespace-normal ${
             member.image
@@ -47,26 +48,7 @@ export function MemberCard({ member, index }: MemberCardProps) {
             </span>
           </div>
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="font-display text-lg sm:text-2xl uppercase">
-            {member.name}
-          </DialogTitle>
-        </DialogHeader>
-        {member.image && (
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted">
-            <Image
-              src={member.image}
-              alt={`Foto de ${member.name}`}
-              fill
-              sizes="(min-width: 640px) 512px, calc(100vw - 4rem)"
-              className="object-cover"
-            />
-          </div>
-        )}
-        <p className="py-5 text-lg">“{member.quote}”</p>
-      </DialogContent>
-    </Dialog>
+      {!onView && <MemberPhotoViewer members={[member]} selectedIndex={open ? 0 : null} onSelect={(index) => setOpen(index !== null)} />}
+    </>
   );
 }

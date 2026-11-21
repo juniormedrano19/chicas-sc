@@ -21,7 +21,7 @@ export const members: Member[] = [
     initials: "VA",
     number: "01",
     quote: "La celeste nació conmigo y se lleva en el corazón. Gracias a Sporting Cristal por darme tantas alegrías. En las buenas y malas siempre. Fuerza Cristal!!",
-    image:"/images/integrantes/laura.jpeg"
+    image: cloudinaryAsset("/images/integrantes/laura.jpeg")
   },
   {
     name: "Sol",
@@ -29,7 +29,7 @@ export const members: Member[] = [
     initials: "CA",
     number: "02",
     quote: "La mejor tribuna es la que compartimos.",
-        image:"/images/integrantes/sol.jpeg"
+        image: cloudinaryAsset("/images/integrantes/sol.jpeg")
   },
   {
     name: "Estrella",
@@ -37,7 +37,7 @@ export const members: Member[] = [
     initials: "LU",
     number: "03",
     quote: "Cada encuentro merece ser recordado.",
-         image:"/images/integrantes/estrella.jpeg"
+         image: cloudinaryAsset("/images/integrantes/estrella.jpeg")
   },
   {
     name: "Andrea",
@@ -73,19 +73,19 @@ export const testimonials: Testimonial[] = [
     name: "Laura",
     text: "Llegué por el amor a Cristal. Me quedé por las amigas que encontré en el camino.",
     tag: "Chica SC",
-      image: "/images/integrantes/laura.jpeg",
+      image: cloudinaryAsset("/images/integrantes/laura.jpeg"),
   },
   {
     name: "Sol",
     text: "Compartir un gol, una previa, una tarde de fútbol… con ellas todo se vive más bonito.",
     tag: "Chica SC",
-          image: "/images/integrantes/sol.jpeg",
+          image: cloudinaryAsset("/images/integrantes/sol.jpeg"),
   },
   {
     name: "Estrella",
     text: "Aquí todas tenemos algo en común: una pasión que no se explica, se vive.",
       tag: "Chica SC",
-            image: "/images/integrantes/estrella.jpeg",
+            image: cloudinaryAsset("/images/integrantes/estrella.jpeg"),
   },
 ];
 export const faqs = [
@@ -110,3 +110,5 @@ export const faqs = [
     a: "¡Sí! Escríbenos tu propuesta desde el formulario de contacto. Nos interesa conocer iniciativas que aporten a nuestra comunidad.",
   },
 ];
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
+

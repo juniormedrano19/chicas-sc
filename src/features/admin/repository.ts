@@ -9,8 +9,16 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  writeBatch,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
+import {
+  SPORTING_CRISTAL_TEAM_ID,
+  leagueLogoUrl,
+  mapSofascoreEvent,
+  teamLogoUrl,
+  type SofascoreEvent,
+} from "@/features/matches/sofascore";
 import type {
   AdminUser,
   Role,
@@ -19,7 +27,71 @@ import type {
   AdminTeam,
   AdminLeague,
   MatchStatus,
+  SofascoreImportPreview,
+  SofascoreImportResult,
 } from "./types";
+
+function isSofascoreEvent(value: unknown): value is SofascoreEvent {
+  if (!value || typeof value !== "object") return false;
+
+  const event = value as Record<string, unknown>;
+  const teamsAreValid = [event.homeTeam, event.awayTeam].every((team) => {
+    if (!team || typeof team !== "object") return false;
+    const data = team as Record<string, unknown>;
+    return typeof data.id === "number" && typeof data.name === "string";
+  });
+  const tournament = event.tournament as Record<string, unknown> | undefined;
+  const league = tournament?.uniqueTournament as Record<string, unknown> | undefined;
+  const category = league?.category as Record<string, unknown> | undefined;
+
+  return (
+    typeof event.id === "number" &&
+    typeof event.startTimestamp === "number" &&
+    !!event.status &&
+    typeof (event.status as Record<string, unknown>).type === "string" &&
+    teamsAreValid &&
+    !!league &&
+    typeof league.id === "number" &&
+    typeof league.name === "string" &&
+    !!category &&
+    typeof category.name === "string"
+  );
+}
+
+function getImportEvents(payload: unknown): SofascoreEvent[] {
+  let rawEvents: unknown;
+  if (Array.isArray(payload)) {
+    rawEvents = payload;
+  } else if (payload && typeof payload === "object") {
+    rawEvents = (payload as { events?: unknown }).events;
+  }
+
+  if (!Array.isArray(rawEvents)) {
+    throw new Error('El archivo debe contener una propiedad "events" de SofaScore.');
+  }
+
+  return rawEvents.filter(isSofascoreEvent);
+}
+
+function getCristalEventsForImport(payload: unknown) {
+  const sourceEvents = getImportEvents(payload);
+  const byId = new Map<string, SofascoreEvent>();
+
+  for (const event of sourceEvents) {
+    const includesCristal =
+      String(event.homeTeam.id) === SPORTING_CRISTAL_TEAM_ID ||
+      String(event.awayTeam.id) === SPORTING_CRISTAL_TEAM_ID;
+
+    if (includesCristal) byId.set(String(event.id), event);
+  }
+
+  const events = [...byId.values()];
+  if (events.length === 0) {
+    throw new Error("No encontramos partidos de Sporting Cristal en el archivo.");
+  }
+
+  return { sourceEvents, events };
+}
 
 export const DEFAULT_ROLES: Role[] = [
   {
@@ -391,6 +463,89 @@ export const adminRepository = {
   async deleteMatch(matchId: string): Promise<void> {
     const matchRef = doc(firestore, "matches", matchId);
     await deleteDoc(matchRef);
+  },
+
+  async previewSofascoreMatches(payload: unknown): Promise<SofascoreImportPreview> {
+    const { sourceEvents, events } = getCristalEventsForImport(payload);
+    const matchesSnapshot = await getDocs(collection(firestore, "matches"));
+    const existingMatchIds = new Set(matchesSnapshot.docs.map((match) => match.id));
+    let created = 0;
+    let updated = 0;
+
+    const items = events.map((event) => {
+      const { matchId, league, match } = mapSofascoreEvent(event);
+      const action: "create" | "update" = existingMatchIds.has(matchId)
+        ? "update"
+        : "create";
+      if (action === "update") updated += 1;
+      else created += 1;
+
+      return {
+        id: matchId,
+        homeTeam: event.homeTeam.shortName ?? event.homeTeam.name,
+        awayTeam: event.awayTeam.shortName ?? event.awayTeam.name,
+        competition: league.data.name,
+        kickoffAt: match.kickoffAt,
+        action,
+      };
+    });
+
+    return {
+      items,
+      created,
+      updated,
+      skipped: sourceEvents.length - events.length,
+    };
+  },
+
+  /**
+   * Uses the SofaScore event ID as the Firestore document ID. Importing that
+   * event again updates its score, date and status instead of duplicating it.
+   */
+  async importSofascoreMatches(payload: unknown): Promise<SofascoreImportResult> {
+    const { sourceEvents, events } = getCristalEventsForImport(payload);
+
+    const matchesSnapshot = await getDocs(collection(firestore, "matches"));
+    const existingMatchIds = new Set(matchesSnapshot.docs.map((match) => match.id));
+    let created = 0;
+    let updated = 0;
+
+    // Maximum 500 Firestore writes per batch. One event writes two teams,
+    // one league and one match, so batches of 100 are safely below the limit.
+    for (let index = 0; index < events.length; index += 100) {
+      const batch = writeBatch(firestore);
+      const chunk = events.slice(index, index + 100);
+
+      for (const event of chunk) {
+        const { matchId, teams, league, match } = mapSofascoreEvent(event);
+
+        for (const team of teams) {
+          batch.set(
+            doc(firestore, "teams", team.teamId),
+            { ...team.data, logoUrl: teamLogoUrl(team.teamId) },
+            { merge: true },
+          );
+        }
+
+        batch.set(
+          doc(firestore, "leagues", league.leagueId),
+          { ...league.data, logoUrl: leagueLogoUrl(league.leagueId) },
+          { merge: true },
+        );
+        batch.set(doc(firestore, "matches", matchId), match, { merge: true });
+
+        if (existingMatchIds.has(matchId)) updated += 1;
+        else created += 1;
+      }
+
+      await batch.commit();
+    }
+
+    return {
+      created,
+      updated,
+      skipped: sourceEvents.length - events.length,
+    };
   },
 };
 
