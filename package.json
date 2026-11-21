@@ -10,7 +10,8 @@
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "seed:firestore": "node --experimental-strip-types scripts/seed-firestore.ts",
     "seed:admin": "node --experimental-strip-types scripts/seed-admin.ts",
-    "upload:images": "node --env-file=.env.local scripts/upload-images-to-cloudinary.mjs"
+    "upload:images": "node --env-file=.env.local scripts/upload-images-to-cloudinary.mjs",
+    "migrate:team-logos": "node --env-file=.env.local scripts/migrate-team-logos.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

@@ -505,6 +505,11 @@ export const adminRepository = {
   async importSofascoreMatches(payload: unknown): Promise<SofascoreImportResult> {
     const { sourceEvents, events } = getCristalEventsForImport(payload);
 
+    const teamSnapshots = await getDocs(collection(firestore, "teams"));
+    const teamsWithLogos = new Set(teamSnapshots.docs
+      .filter((team) => typeof team.data().logoUrl === "string" && team.data().logoUrl)
+      .map((team) => team.id));
+
     const matchesSnapshot = await getDocs(collection(firestore, "matches"));
     const existingMatchIds = new Set(matchesSnapshot.docs.map((match) => match.id));
     let created = 0;
@@ -522,7 +527,10 @@ export const adminRepository = {
         for (const team of teams) {
           batch.set(
             doc(firestore, "teams", team.teamId),
-            { ...team.data, logoUrl: teamLogoUrl(team.teamId) },
+            {
+              ...team.data,
+              ...(!teamsWithLogos.has(team.teamId) ? { logoUrl: teamLogoUrl(team.teamId) } : {}),
+            },
             { merge: true },
           );
         }
