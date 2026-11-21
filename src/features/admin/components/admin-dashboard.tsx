@@ -9,6 +9,9 @@ import {
   LogOut,
   ShieldCheck,
   ChevronRight,
+  Images,
+  ContactRound,
+  MessageSquareQuote,
 } from "lucide-react";
 import { UserAvatar } from "./user-avatar";
 import { InboxSubmissions } from "./inbox-submissions";
@@ -155,13 +158,19 @@ export function AdminDashboard({
           </div>
         </div>
 
-        {/* 4 Secciones de navegación principales */}
+        {/* Secciones de navegación principales */}
         <div className="px-2 py-2 space-y-1">
-          <button type="button" onClick={() => changeSection("albums")} className={`w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium ${activeSection === "albums" ? "bg-[#e7ebf0] text-slate-900" : "text-slate-600 hover:bg-[#eaeef3]"}`}>Álbumes</button>
-          {(["members", "testimonials"] as const).map((section) => (
+          {([
+            { section: "albums", label: "Álbumes", icon: Images },
+            { section: "members", label: "Integrantes", icon: ContactRound },
+            { section: "testimonials", label: "Testimonios", icon: MessageSquareQuote },
+          ] as const).map(({ section, label, icon: Icon }) => (
             <button key={section} type="button" onClick={() => changeSection(section)}
-              className={`w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium ${activeSection === section ? "bg-[#e7ebf0] text-slate-900" : "text-slate-600 hover:bg-[#eaeef3]"}`}>
-              {section === "members" ? "Integrantes" : "Testimonios"}
+              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg font-medium text-xs transition-colors cursor-pointer ${activeSection === section ? "text-slate-900 bg-[#e7ebf0] font-semibold" : "text-slate-600 hover:bg-[#eaeef3] hover:text-slate-900"}`}>
+              <span className="flex items-center gap-2.5">
+                <Icon aria-hidden="true" className={`size-4 ${activeSection === section ? "text-primary" : "text-slate-500"}`} />
+                <span>{label}</span>
+              </span>
             </button>
           ))}
           {/* 1. Bandeja de entrada */}
