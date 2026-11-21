@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const site = {
   name: "Chicas SC",
+  alternateNames: ["chicas-sc", "chicassc", "Chicas Sporting Cristal"],
   title: "Chicas SC | El grupo de amigas de siempre | Fuerza Cristal",
   description:
     "Las amigas de siempre, unidas por la misma pasión celeste. Juntas en la tribuna y en cada historia. ¡Fuerza Cristal! 🩵🩵",
@@ -35,6 +36,7 @@ export function pageMetadata({
   const url = absoluteUrl(path);
   return {
     title: { absolute: title },
+    keywords: [site.name, ...site.alternateNames],
     description,
     alternates: { canonical: url },
     openGraph: {

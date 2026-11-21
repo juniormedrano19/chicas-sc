@@ -35,8 +35,8 @@ export default async function Home() {
       <JsonLd data={{
         "@context": "https://schema.org",
         "@graph": [
-          { "@type": "Organization", "@id": absoluteUrl("/#organization"), name: site.name, url: site.url, description: "Comunidad independiente de mujeres hinchas de Sporting Cristal.", logo: cloudinaryAsset("/images/chicas-sc-logo-transparent.png"), sameAs: site.socials },
-          { "@type": "WebSite", "@id": absoluteUrl("/#website"), url: site.url, name: site.name, inLanguage: site.language, publisher: { "@id": absoluteUrl("/#organization") } },
+          { "@type": "Organization", "@id": absoluteUrl("/#organization"), name: site.name, alternateName: site.alternateNames, url: site.url, description: "Comunidad independiente de mujeres hinchas de Sporting Cristal.", logo: cloudinaryAsset("/images/chicas-sc-logo-transparent.png"), sameAs: site.socials },
+          { "@type": "WebSite", "@id": absoluteUrl("/#website"), url: site.url, name: site.name, alternateName: site.alternateNames, inLanguage: site.language, publisher: { "@id": absoluteUrl("/#organization") } },
           { "@type": "WebPage", "@id": absoluteUrl("/#webpage"), url: site.url, name: site.title, description: site.description, inLanguage: site.language, isPartOf: { "@id": absoluteUrl("/#website") } },
         ],
       }} />
