@@ -6,6 +6,7 @@ import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { useMatchesCarousel } from "./hooks/use-matches-carousel";
 import { MatchCard } from "./components/match-card";
+import { MatchCardSkeleton } from "./components/match-card-skeleton";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import type { MatchResult } from "./repository";
 
@@ -65,16 +66,15 @@ export function MatchesSection({ result }: { result: MatchResult }) {
             onScroll={updateScrollState}
             className="flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto py-3 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
+            {state === "loading" && !matches.length && Array.from({ length: 4 }, (_, index) => <MatchCardSkeleton key={index} />)}
             {matches.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
           </div>
 
-          {!matches.length && (
+          {!matches.length && state !== "loading" && (
             <p role="status" className="rounded-xl border bg-white p-8">
-              {state === "loading"
-                ? "Cargando partidos..."
-                : state === "error"
+              {state === "error"
                   ? "No pudimos cargar los partidos. Intenta nuevamente más tarde."
                   : "Aún no hay resultados publicados."}
             </p>

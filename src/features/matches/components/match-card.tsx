@@ -1,7 +1,11 @@
-import Image from "next/image";
+"use client";
+
+import { useCallback, useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { Match } from "../schema";
+import { MatchCardSkeletonContent, matchCardClassName } from "./match-card-skeleton";
+import { TeamLogo, type LogoStatus } from "./team-logo";
 
 const statusLabel = {
   scheduled: "Próximo",
@@ -16,32 +20,27 @@ export interface MatchCardProps {
 }
 
 export function MatchCard({ match }: MatchCardProps) {
+  const [logos, setLogos] = useState<Record<string, LogoStatus>>({});
+  const loading = !logos[match.homeTeamLogoUrl] || !logos[match.awayTeamLogoUrl];
+  const settleLogo = useCallback((src: string, status: LogoStatus) => {
+    setLogos((current) => current[src] === status ? current : { ...current, [src]: status });
+  }, []);
   return (
-    <article className="min-w-[82%] sm:min-w-[calc(50%-10px)] lg:min-w-[calc(25%-12px)] shrink-0 snap-start rounded-xl border border-secondary/15 bg-white/95 p-4 sm:p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300">
+    <article aria-busy={loading} className={`${matchCardClassName} relative hover:shadow-md hover:border-primary/40 transition-all duration-300`}>
+      {loading && <div className="pointer-events-none absolute inset-0 rounded-xl bg-white/95 p-4 sm:p-5"><MatchCardSkeletonContent /><span role="status" className="sr-only">Cargando escudos de {match.homeTeam} y {match.awayTeam}</span></div>}
+      <div className={loading ? "opacity-0" : "opacity-100 transition-opacity duration-200 motion-reduce:transition-none"}>
       <div className="flex justify-between text-xs text-muted-foreground">
         <span>{format(match.kickoffAt, "dd MMM yyyy", { locale: es })}</span>
         <span className="text-secondary font-medium">{statusLabel[match.status]}</span>
       </div>
 
       <div className="my-6 flex items-center justify-between gap-3">
-        <Image
-          className="size-11 shrink-0 object-contain"
-          src={match.homeTeamLogoUrl}
-          alt={`Escudo de ${match.homeTeam}`}
-          width={44}
-          height={44}
-        />
+        <TeamLogo src={match.homeTeamLogoUrl} name={match.homeTeam} status={logos[match.homeTeamLogoUrl]} onSettled={settleLogo} />
         <span className="font-display text-3xl font-semibold tabular-nums">
           {match.homeScore ?? "–"} <span className="mx-1 text-border">:</span>{" "}
           {match.awayScore ?? "–"}
         </span>
-        <Image
-          className="size-11 shrink-0 object-contain"
-          src={match.awayTeamLogoUrl}
-          alt={`Escudo de ${match.awayTeam}`}
-          width={44}
-          height={44}
-        />
+        <TeamLogo src={match.awayTeamLogoUrl} name={match.awayTeam} status={logos[match.awayTeamLogoUrl]} onSettled={settleLogo} />
       </div>
 
       <div className="flex justify-between gap-2 text-xs font-semibold">
@@ -51,6 +50,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
       <div className="mt-5 border-t pt-3 text-xs text-muted-foreground">
         {match.competition}
+      </div>
       </div>
     </article>
   );
