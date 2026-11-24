@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { ImagePlus, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditorField } from "./editor-field";
+import { MAX_IMAGE_MB } from "../../image-upload-limits";
 
 export function ImageUploadField({ count, multiple = false, disabled, uploading, error, onFiles }: {
   count: number;
@@ -15,7 +16,7 @@ export function ImageUploadField({ count, multiple = false, disabled, uploading,
 }) {
   const input = useRef<HTMLInputElement>(null);
   return <EditorField label={multiple ? "Fotos del álbum" : "Foto de la integrante"} error={error}
-    description={multiple ? "Hasta 100 fotos de 10 MB cada una. La primera será la portada." : "Una foto de hasta 10 MB. Aparecerá en su tarjeta y sus testimonios."}>
+    description={multiple ? `Hasta 100 fotos de ${MAX_IMAGE_MB} MB cada una. La primera será la portada.` : `Una foto de hasta ${MAX_IMAGE_MB} MB. Aparecerá en su tarjeta y sus testimonios.`}>
     {(props) => <div className="rounded-xl border border-dashed border-input bg-muted/30 p-4">
       <input ref={input} type="file" accept="image/*" multiple={multiple} hidden disabled={disabled}
         onChange={(event) => { const files = Array.from(event.target.files ?? []); event.target.value = ""; onFiles(files); }} />

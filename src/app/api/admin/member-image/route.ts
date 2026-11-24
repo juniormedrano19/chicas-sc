@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import sharp from "sharp";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
+import { MAX_IMAGE_BYTES, MAX_IMAGE_MB } from "@/features/admin/image-upload-limits";
 
 export const runtime = "nodejs";
 
@@ -19,8 +20,8 @@ export async function POST(request: Request) {
     const form = await request.formData();
     const section = form.get("section") === "albums" ? "albumes" : "integrantes";
     const file = form.get("image");
-    if (!(file instanceof File) || !file.size || file.size > 10 * 1024 * 1024) {
-      return Response.json({ error: "Selecciona una imagen de hasta 10 MB." }, { status: 400 });
+    if (!(file instanceof File) || !file.size || file.size > MAX_IMAGE_BYTES) {
+      return Response.json({ error: `Selecciona una imagen de hasta ${MAX_IMAGE_MB} MB.` }, { status: 400 });
     }
     const input = Buffer.from(await file.arrayBuffer());
     const metadata = await sharp(input, { limitInputPixels: 40_000_000 }).metadata();
